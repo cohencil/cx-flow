@@ -6,9 +6,9 @@ jobs:
       - image: circleci/openjdk:8-jdk
     working_directory: ~/repo
     environment:
-      JIRA_TOKEN: ${JIRA_TOKEN}
-      JIRA_URL: ${JIRA_URL}
-      JIRA_USER_NAME: ${JIRA_USER_NAME}
+      JIRA_TOKEN: {{JIRA_TOKEN}}
+      JIRA_URL: {{"JIRA_URL"}}
+      JIRA_USER_NAME: ${"JIRA_USER_NAME"}
       MAVEN_OPTS: -Xmx3200m
       BASE_URL: ${BASE_URL}
       CHECKMARX_CLIENT_SECRET: ${CHECKMARX_CLIENT_SECRET}
