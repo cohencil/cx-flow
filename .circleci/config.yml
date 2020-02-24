@@ -96,10 +96,9 @@ workflows:
   version: 2
   build_deploy:
     jobs:
-      - run-tests:
-          context: tal_tests_Context
+      - context: tal_tests_Context
       - build
-      - run integrationTest
+      - integrationTest
       - docker-push:
           filters:
             branches:
