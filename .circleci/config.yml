@@ -11,7 +11,23 @@ jobs:
       - image: circleci/openjdk:8-jdk
     working_directory: ~/repo
     environment:
+      JIRA_TOKEN: ${JIRA_TOKEN}
+      JIRA_URL: ${JIRA_URL}
+      JIRA_USER_NAME: ${JIRA_USER_NAME}
       MAVEN_OPTS: -Xmx3200m
+      BASE_URL: ${BASE_URL}
+      CHECKMARX_CLIENT_SECRET: ${CHECKMARX_CLIENT_SECRET}
+      CHECKMARX_PASSWORD: ${CHECKMARX_PASSWORD}
+      CHECKMARX_USERNAME: ${CHECKMARX_USERNAME}
+      GITHUB_TOKEN: ${GITHUB_TOKEN}
+      GITHUB_URL: ${GITHUB_URL}
+      GITHUB_WEBHOOK_TOKEN: ${GITHUB_WEBHOOK_TOKEN}
+      ${}
+      ${}
+      ${}
+      ${}
+      ${}
+      ${}
     steps:
       - checkout
       - restore_cache:
@@ -30,6 +46,9 @@ jobs:
           paths:
             - ~/.gradle/caches
           key: v1-gradle-cache-{{ checksum "build.gradle" }}
+      #      - store_test_results:
+      #          path:
+      #          - build/libs/test-results
       - store_artifacts:
           path: build/libs
       - persist_to_workspace:
@@ -217,18 +236,20 @@ workflows:
   version: 2
   build_deploy:
     jobs:
+      - run-tests:
+          context: tal_tests_Context
       - build
       - sonar:
           context: sonarcloud
           filters:
             branches:
-              only: develop
+              only:  tal_tests
           requires:
             - build
       - docker-build:
           filters:
             branches:
-              only: develop
+              only: tal_tests
           requires:
             - build
       - deploy-cxflow:
