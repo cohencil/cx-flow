@@ -23,6 +23,8 @@ jobs:
           key: v1-gradle-wrapper-{{ checksum "gradle/wrapper/gradle-wrapper.properties" }}
       - restore_cache:
           key: v1-gradle-cache-{{ checksum "build.gradle" }}
+      - context: tal_tests_Context
+      - run: chmod u+x gradlew
       - run: ./gradlew clean build
       - run: ./gradlew integrationTest
       - run: ./gradlew -b build-11.gradle --build-cache assemble
@@ -59,6 +61,8 @@ jobs:
   docker-push:
     docker:
       - image: docker:18.06.3-ce-git
+        environment:
+          DOCKER_REPO: docker.io/checkmarxts/cxflow
     steps:
       - setup_remote_docker
       - attach_workspace:
