@@ -33,10 +33,10 @@ jobs:
             mkdir -p ~/cucumber
             bundle exec cucumber --format pretty --format json --out ~/cucumber/tests.cucumber
           when: always
-                  - store_test_results:
+          - store_test_results:
+              path: ~/cucumber
+              - store_artifacts:
                   path: ~/cucumber
-                  - store_artifacts:
-                      path: ~/cucumber
       - run: ./gradlew -b build-11.gradle --build-cache assemble
       - run: ./gradlew -q getVersion > build/libs/version.txt
       - save_cache:
