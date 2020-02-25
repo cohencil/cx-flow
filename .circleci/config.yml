@@ -32,19 +32,10 @@ jobs:
           path: build/libs
       - persist_to_workspace:
           root: .
-          paths:
-            - build/libs/*
-            - Dockerfile
-      - run:
-          name: Save test results
-          command: |
-            mkdir -p ~/test-results/junit/
-            find . -type f -regex ".*/build/test-results/.*xml" -exec cp {} ~/test-results/junit/ \;
-          when: always
-      - store_test_results:
-          path: ~/test-results
-      - store_artifacts:
-          path: ~/test-results/junit
+      paths:
+        - build/libs/*
+        - Dockerfile
+        - Dockerfile-11
 
   docker-push:
     docker:
