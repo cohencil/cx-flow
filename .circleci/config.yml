@@ -17,7 +17,6 @@ jobs:
           key: v1-gradle-wrapper-{{ checksum "gradle/wrapper/gradle-wrapper.properties" }}
       - restore_cache:
           key: v1-gradle-cache-{{ checksum "build.gradle" }}
-      - context: tal_tests_Context
       - run: chmod u+x gradlew
       - run: ./gradlew clean build
       - run: ./gradlew integrationTest
@@ -221,7 +220,6 @@ workflows:
   version: 2
   build_deploy:
     jobs:
-      - context: tal_tests_Context
       - build
       - sonar:
           context: sonarcloud
