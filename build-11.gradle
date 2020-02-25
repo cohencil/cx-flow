@@ -1,15 +1,13 @@
-import org.gradle.api.tasks.testing.Test
-
 buildscript {
-	ext {
-        CxSBSDK = "0.4.8"
-		    springBootVersion = '2.2.4.RELEASE'
+    ext {
+        CxSBSDK = "0.4.5"
+        springBootVersion = '2.2.4.RELEASE'
         sonarqubeVersion = '2.8'
         atlassianVersion = "5.2.0"
         atlassianFugueVersion = "4.7.2"
-        mainClass='com.checkmarx.flow.CxFlowApplication'
+        mainClass = 'com.checkmarx.flow.CxFlowApplication'
     }
-	repositories {
+    repositories {
         jcenter()
         mavenLocal()
         mavenCentral()
@@ -17,9 +15,9 @@ buildscript {
             url = 'https://packages.atlassian.com/mvn/maven-external'
         }
         gradlePluginPortal()
-	}
-	dependencies {
-        classpath ("gradle.plugin.com.gorylenko.gradle-git-properties:gradle-git-properties:2.0.0")
+    }
+    dependencies {
+        classpath("gradle.plugin.com.gorylenko.gradle-git-properties:gradle-git-properties:2.0.0")
         classpath("org.springframework.boot:spring-boot-gradle-plugin:${springBootVersion}")
         classpath "org.sonarsource.scanner.gradle:sonarqube-gradle-plugin:${sonarqubeVersion}"
     }
@@ -42,46 +40,46 @@ def junitVersion = '5.5.0'
 
 repositories {
     mavenLocal()
-	mavenCentral()
+    mavenCentral()
     maven {
         url = 'https://packages.atlassian.com/mvn/maven-external'
     }
 }
 
 dependencies {
-	compile('org.springframework.boot:spring-boot-starter-actuator')
-	compile('org.springframework.boot:spring-boot-starter-web')
+    compile('org.springframework.boot:spring-boot-starter-actuator')
+    compile('org.springframework.boot:spring-boot-starter-web')
     compile('org.springframework.boot:spring-boot-starter-aop')
     compile("com.github.checkmarx-ts:cx-spring-boot-sdk:${CxSBSDK}")
-    compile ("org.apache.commons:commons-text:1.8")
-    compile ('commons-codec:commons-codec:1.13')
-    compile ('commons-io:commons-io:2.6')
-    compile ('org.json:json:20190722')
-    compile ('com.fasterxml.jackson.core:jackson-databind')
-    compile ('org.springframework.boot:spring-boot-starter-web-services')
-    compile ('org.springframework.boot:spring-boot-starter-mail')
-    compile ('org.springframework.boot:spring-boot-starter-thymeleaf')
-    compile ('com.github.ulisesbocchio:jasypt-spring-boot-starter:2.1.2')
-    compile ("io.atlassian.fugue:fugue:${atlassianFugueVersion}")
-    compile ("com.atlassian.jira:jira-rest-java-client-core:${atlassianVersion}")
-    compile ("com.atlassian.jira:jira-rest-java-client-api:${atlassianVersion}")
-    compile ("org.thymeleaf:thymeleaf:3.0.11.RELEASE")
-    compile ("org.apache.httpcomponents:httpclient:4.5.10")
-    compile ("org.codehaus.groovy:groovy-all:2.5.8")
-    compile ("org.apache.ivy:ivy:2.5.0")
-    compile ("org.eclipse.jgit:org.eclipse.jgit:5.5.1.201910021850-r")
+    compile("org.apache.commons:commons-text:1.8")
+    compile('commons-codec:commons-codec:1.13')
+    compile('commons-io:commons-io:2.6')
+    compile('org.json:json:20190722')
+    compile('com.fasterxml.jackson.core:jackson-databind')
+    compile('org.springframework.boot:spring-boot-starter-web-services')
+    compile('org.springframework.boot:spring-boot-starter-mail')
+    compile('org.springframework.boot:spring-boot-starter-thymeleaf')
+    compile('com.github.ulisesbocchio:jasypt-spring-boot-starter:2.1.2')
+    compile("io.atlassian.fugue:fugue:${atlassianFugueVersion}")
+    compile("com.atlassian.jira:jira-rest-java-client-core:${atlassianVersion}")
+    compile("com.atlassian.jira:jira-rest-java-client-api:${atlassianVersion}")
+    compile("org.thymeleaf:thymeleaf:3.0.11.RELEASE")
+    compile("org.apache.httpcomponents:httpclient:4.5.10")
+    compile("org.codehaus.groovy:groovy-all:2.5.8")
+    compile("org.apache.ivy:ivy:2.5.0")
+    compile("org.eclipse.jgit:org.eclipse.jgit:5.5.1.201910021850-r")
     compile group: 'com.sun.xml.bind', name: 'jaxb-impl', version: '2.4.0-b180830.0438'
     compile group: 'javax.xml.ws', name: 'jaxws-api', version: '2.3.1'
     compile group: 'com.sun.xml.bind', name: 'jaxb-core', version: '2.3.0.1'
     compile group: 'com.sun.xml.messaging.saaj', name: 'saaj-impl', version: '1.4.0'
-    compileOnly ('org.springframework.boot:spring-boot-configuration-processor')
+    compileOnly('org.springframework.boot:spring-boot-configuration-processor')
 
     runtime('org.springframework.boot:spring-boot-devtools')
     testCompile('org.springframework.boot:spring-boot-starter-test')
     testImplementation("io.cucumber:cucumber-java:${cucumberVersion}")
     testImplementation("io.cucumber:cucumber-junit:${cucumberVersion}")
     testImplementation("io.cucumber:cucumber-spring:${cucumberVersion}")
-    testImplementation( "org.junit.jupiter:junit-jupiter-api:${junitVersion}")
+    testImplementation("org.junit.jupiter:junit-jupiter-api:${junitVersion}")
     testRuntimeOnly("org.junit.jupiter:junit-jupiter-engine:${junitVersion}")
     testRuntimeOnly("org.junit.vintage:junit-vintage-engine:${junitVersion}")
     testCompile("org.mockito:mockito-core:+")
@@ -99,18 +97,39 @@ configurations {
     libsDirName = 'libs/java11'
 }
 
+
 test {
     useJUnit {
         systemProperty "testprofile", "unit"
+        if (System.properties['testprofile'] != 'integration') {
+            exclude 'com/checkmarx/flow/cucumber/integration/**'
+        } else {
+             exclude 'com/checkmarx/**'
+            include 'com/checkmarx/flow/cucumber/component/**'
+        }
     }
 }
 
 task integrationTest(type: Test) {
-    useJUnit {
+    useJUnitPlatform() {
         systemProperty "testprofile", "integration"
+        if (System.properties['testprofile'] != 'unit') {
+            include 'com/checkmarx/flow/cucumber/integration/**'
+        } else {
+            //exclude 'com/checkmarx/**'
+            exclude 'com/checkmarx/flow/cucumber/component/**'
+        }
+        testLogging {
+            events "passed", "skipped", "failed"
+        }
     }
 }
+test {
 
+    useJUnitPlatform()
+
+
+}
 bootJar {
     mainClassName = "${mainClass}"
 }

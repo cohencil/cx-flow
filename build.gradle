@@ -128,6 +128,9 @@ task integrationTest(type: Test) {
             //exclude 'com/checkmarx/**'
             exclude 'com/checkmarx/flow/cucumber/component/**'
         }
+        testLogging {
+            events "passed", "skipped", "failed"
+        }
     }
 }
 task getVersion {
