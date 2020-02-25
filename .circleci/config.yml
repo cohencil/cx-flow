@@ -23,24 +23,24 @@ jobs:
       - run: ./gradlew -b build-11.gradle --build-cache assemble
       - run: ./gradlew -q getVersion > build/libs/version.txt
       - save_cache:
-          paths:
-            - ~/.gradle/wrapper
-          key: v1-gradle-wrapper-{{ checksum "gradle/wrapper/gradle-wrapper.properties" }}
+        paths:
+          - ~/.gradle/wrapper
+        key: v1-gradle-wrapper-{{ checksum "gradle/wrapper/gradle-wrapper.properties" }}
       - save_cache:
-          paths:
-            - ~/.gradle/caches
-          key: v1-gradle-cache-{{ checksum "build.gradle" }}
+        paths:
+          - ~/.gradle/caches
+        key: v1-gradle-cache-{{ checksum "build.gradle" }}
       - store_test_results:
-           path:
-             - build/libs/test-results
+         path:
+           - build/libs/test-results
       - store_artifacts:
           path: build/libs
       - persist_to_workspace:
-          root: .
-          paths:
-            - build/libs/*
-            - Dockerfile
-            - Dockerfile-11
+        root: .
+        paths:
+          - build/libs/*
+          - Dockerfile
+          - Dockerfile-11
 
   sonar:
     docker:
