@@ -37,10 +37,10 @@ jobs:
           path: build/libs
       - persist_to_workspace:
           root: .
-      paths:
-        - build/libs/*
-        - Dockerfile
-        - Dockerfile-11
+          paths:
+            - build/libs/*
+            - Dockerfile
+            - Dockerfile-11
 
   sonar:
     docker:
