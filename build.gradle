@@ -113,8 +113,8 @@ test {
         if (System.properties['testprofile'] != 'integration') {
             exclude 'com/checkmarx/flow/cucumber/integration/**'
         }else{
-            exclude 'com/checkmarx/**'
-            include 'com/checkmarx/flow/cucumber/integration/**'
+           // exclude 'com/checkmarx/**'
+            include 'com/checkmarx/flow/cucumber/component/**'
         }
     }
 }
@@ -122,20 +122,17 @@ test {
 task integrationTest(type: Test) {
     useJUnitPlatform() {
         systemProperty "testprofile", "integration"
-
+        if (System.properties['testprofile'] != 'unit') {
+            include 'com/checkmarx/flow/cucumber/integration/**'
+        }else{
+            //exclude 'com/checkmarx/**'
+            exclude 'com/checkmarx/flow/cucumber/component/**'
+        }
     }
 }
-
-
-
-
 task getVersion {
     doLast {
         println "${version}"
     }
-}
-
-test {
-    useJUnitPlatform()
 }
 
