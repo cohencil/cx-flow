@@ -92,7 +92,6 @@ workflows:
       context: tal_tests_context
       jobs:
         - run: ./gradlew IntegrationTest
-
       - docker-push:
           filters:
             branches:
