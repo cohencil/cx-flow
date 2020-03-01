@@ -19,7 +19,7 @@ jobs:
           key: v1-gradle-cache-{{ checksum "build.gradle" }}
       - run: chmod u+x gradlew
       - run: ./gradlew clean build
-      #      - run: ./gradlew IntegrationTest
+      - run: ./gradlew unitTest
       - run: ./gradlew -b build-11.gradle --build-cache assemble
       - run: ./gradlew -q getVersion > build/libs/version.txt
       - save_cache:
@@ -181,6 +181,7 @@ jobs:
       - run:
           name: Publish Docker images to Docker Hub
           command: |
+            VERSION=$(cat ./build/libs/version.txt)
             docker login -u ${DOCKER_USER} -p ${DOCKER_PASSWORD} docker.io
             docker build --target java8 \
              -t ${DOCKER_REPO}:${VERSION}-8 \
