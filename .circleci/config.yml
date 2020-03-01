@@ -92,11 +92,11 @@ workflows:
       context: tal_tests_context
       jobs:
         - run: ./gradlew IntegrationTest
-      - docker-push:
-          filters:
-            branches:
-              only:  tal_tests
-#          requires:
+# - docker-push:
+#          filters:
+#            branches:
+#              only:  tal_tests
+##          requires:
 #            - build
 #      - publish-github-release:
 #          filters:
@@ -104,5 +104,5 @@ workflows:
 #              only: tal_tests
 #          requires:
 #            - build
-run_IntegrationTest:
-  version: 2
+#run_IntegrationTest:
+#  version: 2
