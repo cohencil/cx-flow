@@ -86,11 +86,11 @@ workflows:
   build_deploy:
     jobs:
       - build
-  run_Test:
-    context: tal_tests_context
-    jobs:
+      - run_Test:
+      context: tal_tests_context
+      jobs:
         - Integration_Test:
-          - run: ./gradlew IntegrationTest
+            - run: ./gradlew IntegrationTest
         - unitTest:
             - run: ./gradlew IntegrationTest
 # - docker-push:
