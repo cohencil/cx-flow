@@ -89,9 +89,10 @@ workflows:
 
     staging-local-chrome:
       when: << pipeline.parameters.integrationtests >>
+      context: tal_tests_context
       jobs:
         - run: ./gradlew IntegrationTest
-        context: tal_tests_context
+
       - docker-push:
           filters:
             branches:
