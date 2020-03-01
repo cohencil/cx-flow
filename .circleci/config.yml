@@ -87,7 +87,7 @@ workflows:
     jobs:
       - build
 
-    staging-local-chrome:
+    Integration_Test:
       when: << pipeline.parameters.tal_tests >>
       context: tal_tests_context
       jobs:
