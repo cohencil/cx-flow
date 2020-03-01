@@ -86,12 +86,11 @@ workflows:
   build_deploy:
     jobs:
       - build
-
-    Integration_Test:
-      when: << pipeline.parameters.tal_tests >>
-      context: tal_tests_context
-      jobs:
-        - run: ./gradlew IntegrationTest
+Integration_Test:
+  #      when: << pipeline.parameters.tal_tests >>
+  context: tal_tests_context
+  jobs:
+    - run: ./gradlew IntegrationTest
 # - docker-push:
 #          filters:
 #            branches:
