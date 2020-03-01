@@ -89,9 +89,9 @@ workflows:
       - build
       run_Test:
         jobs:
-          - Integration_Test:
+           Integration_Test:
               - run: ./gradlew IntegrationTest
-          - unitTest:
+          unitTest:
               - run: ./gradlew IntegrationTest
   # - docker-push:
 #          filters:
