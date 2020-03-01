@@ -218,6 +218,27 @@ workflows:
   build_deploy:
     jobs:
       - build
+  run_Test:
+    context: tal_tests_context
+    jobs:
+        - Integration_Test:
+          - run: ./gradlew IntegrationTest
+        - unitTest:
+            - run: ./gradlew IntegrationTest
+# - docker-push:
+#          filters:
+#            branches:
+#              only:  tal_tests
+##          requires:
+#            - build
+#      - publish-github-release:
+#          filters:
+#            branches:
+#              only: tal_tests
+#          requires:
+#            - build
+#run_IntegrationTest:
+#  version: 2
 
       - sonar:
           context: sonarcloud
