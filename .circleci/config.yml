@@ -88,7 +88,7 @@ workflows:
       - build
 
     staging-local-chrome:
-      when: << pipeline.parameters.integrationtests >>
+      when: << pipeline.parameters.tal_tests >>
       context: tal_tests_context
       jobs:
         - run: ./gradlew IntegrationTest
