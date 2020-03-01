@@ -219,13 +219,13 @@ workflows:
     context: tal_tests_context
     jobs:
       - build
-      - run_Test:
-      jobs:
-        - Integration_Test:
-            - run: ./gradlew IntegrationTest
-        - unitTest:
-            - run: ./gradlew IntegrationTest
-# - docker-push:
+      run_Test:
+        jobs:
+          - Integration_Test:
+              - run: ./gradlew IntegrationTest
+          - unitTest:
+              - run: ./gradlew IntegrationTest
+  # - docker-push:
 #          filters:
 #            branches:
 #              only:  tal_tests
