@@ -89,13 +89,11 @@ workflows:
   run_Test:
     jobs:
         - Integration_Test:
-            name: IntegrationTest
-            context: tal_tests_context
-#         - run: ./gradlew IntegrationTest
-#          context: tal_tests_context
+          - run: ./gradlew IntegrationTest
+              context: tal_tests_context
         - unitTest:
-            name: unitTest
-            context: tal_tests_context
+            - run: ./gradlew IntegrationTest
+               context: tal_tests_context
 # - docker-push:
 #          filters:
 #            branches:
