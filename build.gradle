@@ -107,18 +107,32 @@ bootJar {
     mainClassName = "${mainClass}"
 }
 
-test {
-    useJUnit {
+//task unitTest {
+//    useJUnit {
+//        systemProperty "testprofile", "unit"
+//        if (System.properties['testprofile'] != 'integration') {
+//            exclude 'com/checkmarx/flow/cucumber/integration/**'
+//        }else{
+//           // exclude 'com/checkmarx/**'
+//            include 'com/checkmarx/flow/cucumber/component/**'
+//        }
+//    }
+//}
+
+task unitTest(type: Test) {
+    useJUnitPlatform() {
         systemProperty "testprofile", "unit"
         if (System.properties['testprofile'] != 'integration') {
             exclude 'com/checkmarx/flow/cucumber/integration/**'
         }else{
-           // exclude 'com/checkmarx/**'
+            // exclude 'com/checkmarx/**'
             include 'com/checkmarx/flow/cucumber/component/**'
+        }
+        testLogging {
+            events "passed", "skipped", "failed"
         }
     }
 }
-
 task integrationTest(type: Test) {
     useJUnitPlatform() {
         systemProperty "testprofile", "integration"

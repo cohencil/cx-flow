@@ -14,7 +14,7 @@ jobs:
           key: v1-gradle-cache-{{ checksum "build.gradle" }}
       - run: chmod u+x gradlew
       - run: ./gradlew clean build
-      #      - run: ./gradlew IntegrationTest
+      - run: ./gradlew unitTest
       - run: ./gradlew -b build-11.gradle --build-cache assemble
       - run: ./gradlew -q getVersion > build/libs/version.txt
       - save_cache:
@@ -86,11 +86,16 @@ workflows:
   build_deploy:
     jobs:
       - build
-Integration_Test:
-  #      when: << pipeline.parameters.tal_tests >>
-  context: tal_tests_context
-  jobs:
-    - run: ./gradlew IntegrationTest
+  run_Test:
+    jobs:
+        - Integration_Test:
+            name: IntegrationTest
+            context: tal_tests_context
+#         - run: ./gradlew IntegrationTest
+#          context: tal_tests_context
+        - unitTest:
+            name: unitTest
+            context: tal_tests_context
 # - docker-push:
 #          filters:
 #            branches:
