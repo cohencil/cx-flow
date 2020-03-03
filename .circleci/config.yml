@@ -225,20 +225,7 @@ workflows:
               - run: ./gradlew IntegrationTest
           unitTest:
               - run: ./gradlew IntegrationTest
-  # - docker-push:
-#          filters:
-#            branches:
-#              only:  tal_tests
-##          requires:
-#            - build
-#      - publish-github-release:
-#          filters:
-#            branches:
-#              only: tal_tests
-#          requires:
-#            - build
-#run_IntegrationTest:
-#  version: 2
+
 
       - sonar:
           context: sonarcloud
