@@ -41,13 +41,9 @@ jobs:
           path: ~/test-results
       - store_artifacts:
           path: ~/test-results/junit
-  test:
-    docker:
-      - image: "circleci/openjdk:8-jdk"
-    steps:
-      - run: "./test.gradle IntegrationTest"
-      - run: "./test.gradle unitTest"
-
+    test:
+        - run: "./test.gradle IntegrationTest"
+        - run: "./test.gradle unitTest"
 
   docker-push:
     docker:
@@ -93,7 +89,6 @@ workflows:
   build_and_test:
     jobs:
       - build
-      - test
 #workflows:
 #  version: 2
 #  build_deploy:
