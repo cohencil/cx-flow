@@ -40,11 +40,11 @@ jobs:
           path: ~/test-results
       - tore_artifacts:
           path: ~/test-results/junit
-      test:
-        steps:
-          - run: "./gradlew IntegrationTest"
-          - run: "./test.gradle unitTest"
-    working_directory: ~/repo
+  test:
+    steps:
+      - run: "./gradlew IntegrationTest"
+      - run: "./test.gradle unitTest"
+  working_directory: ~/repo
 
   docker-push:
     docker:
