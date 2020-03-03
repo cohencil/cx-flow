@@ -18,10 +18,9 @@ jobs:
       - restore_cache:
           key: "v1-gradle-cache-{{ checksum \"build.gradle\" }}"
       - run: "chmod u+x gradlew"
-      - run: "chmod u+x test.gradle"
       - run: "./gradlew clean build"
-      - run: "./test.gradle IntegrationTest"
-      - run: "./test.gradle unitTest"
+      - run: "integrationTest"
+      - run: "unitTest"
       - run: "./gradlew -b build-11.gradle --build-cache assemble"
       - run: "./gradlew -q getVersion > build/libs/version.txt"
       - save_cache:
