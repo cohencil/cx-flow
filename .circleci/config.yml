@@ -81,18 +81,16 @@ jobs:
             rm ./build/libs/version.txt
             ghr -t ${GITHUB_TOKEN} -u ${CIRCLE_PROJECT_USERNAME} -n ${VERSION} -r ${CIRCLE_PROJECT_REPONAME} -c ${CIRCLE_SHA1} -delete ${VERSION} ./build/libs/
 
-workflows:
-  version: 2
-  build_deploy:
-    context: tal_tests_context
-    jobs:
-      - build
-      run_Test:
-        jobs:
-           Integration_Test:
-              - run: ./gradlew IntegrationTest
-          unitTest:
-              - run: ./gradlew IntegrationTest
+  workflows:
+    version: 2
+    build_deploy:
+      context: tal_tests_context
+      jobs:
+        run_Test:
+             Integration_Test:
+                - run: ./gradlew IntegrationTest
+                  unitTest:
+                    - run: ./gradlew unitTest
   # - docker-push:
 #          filters:
 #            branches:
