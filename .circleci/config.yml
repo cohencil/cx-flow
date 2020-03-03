@@ -3,7 +3,7 @@ parameters:
   run_integration_tests:
     type: boolean
     default: false
-   run_tal_tests_integration_tests:
+    run_tal_tests_integration_tests:
       type: boolean
       default: true
   run_develop_integration_tests:
@@ -97,32 +97,33 @@ jobs:
             rm ./build/libs/version.txt
             ghr -t ${GITHUB_TOKEN} -u ${CIRCLE_PROJECT_USERNAME} -n ${VERSION} -r ${CIRCLE_PROJECT_REPONAME} -c ${CIRCLE_SHA1} -delete ${VERSION} ./build/libs/
 
-#workflows:
-#  version: 2
-#  build_deploy:
-#    context: tal_tests_context
-#    jobs:
-#      run_Test:
-#        Integration_Test:
+            #workflows:
+            #  version: 2
+            #  build_deploy:
+            #    context: tal_tests_context
+            #    jobs:
+            #      run_Test:
+            #        Integration_Test:
             ##          - run: "./gradlew IntegrationTest"
             ##        unitTest:
             ##          - run: "./gradlew unitTest"
-              # This workflow is run on master changes merged to this repo
+          # This workflow is run on master changes merged to this repo
       # This workflow is run on master changes merged to this repo
   workflows:
     # This workflow is run on master changes merged to this repo
-    build:
-      when: << pipeline.parameters.run_tal_tests_integration_tests >>
-      jobs:
-        - IntegrationTest:
-            name: run Integration Test
-            context: tal_tests_context
-        - unitTest:
-            name: run unit Test
-            context: tal_tests_context
-        - unitTest:
-            name: unitTest API
-            context: tal_tests_context
+      build:
+        jobs:
+          - IntegrationTest:
+              context: tal_tests_context
+              name: "run Integration Test"
+          - unitTest:
+              context: tal_tests_context
+              name: "run unit Test"
+          - unitTest:
+              context: tal_tests_context
+              name: "unitTest API"
+        when: "<< pipeline.parameters.run_tal_tests_integration_tests >>"
+
   # - docker-push:
 #          filters:
 #            branches:
