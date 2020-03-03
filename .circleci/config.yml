@@ -41,10 +41,7 @@ jobs:
       - tore_artifacts:
           path: ~/test-results/junit
       test:
-        docker:
-          - setup_remote_docker
         steps:
-          - checkout
           - run: "./gradlew IntegrationTest"
           - run: "./test.gradle unitTest"
     working_directory: ~/repo
