@@ -45,7 +45,7 @@ jobs:
     docker:
       - image: "circleci/openjdk:8-jdk"
     steps:
-      - run: "./gradlew IntegrationTest"
+      - run: "./test.gradle IntegrationTest"
       - run: "./test.gradle unitTest"
 
 
