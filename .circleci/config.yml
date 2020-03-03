@@ -7,29 +7,28 @@ executors:
 
 jobs:
   build:
-    docker:
-      - image: circleci/openjdk:8-jdk
     context: tal_tests_Context
     working_directory: ~/repo
+    docker:
+      - image: "circleci/openjdk:8-jdk"
     steps:
       - checkout
       - restore_cache:
-          key: v1-gradle-wrapper-{{ checksum "gradle/wrapper/gradle-wrapper.properties" }}
+          key: "v1-gradle-wrapper-{{ checksum \"gradle/wrapper/gradle-wrapper.properties\" }}"
       - restore_cache:
-          key: v1-gradle-cache-{{ checksum "build.gradle" }}
-      - run: chmod u+x gradlew
-      - run: ./gradlew clean build
-      - run: ./gradlew unitTest
-      - run: ./gradlew -b build-11.gradle --build-cache assemble
-      - run: ./gradlew -q getVersion > build/libs/version.txt
+          key: "v1-gradle-cache-{{ checksum \"build.gradle\" }}"
+      - run: "chmod u+x gradlew"
+      - run: "./gradlew clean build"
+      - run: "./gradlew -b build-11.gradle --build-cache assemble"
+      - run: "./gradlew -q getVersion > build/libs/version.txt"
       - save_cache:
+          key: "v1-gradle-wrapper-{{ checksum \"gradle/wrapper/gradle-wrapper.properties\" }}"
           paths:
             - ~/.gradle/wrapper
-          key: v1-gradle-wrapper-{{ checksum "gradle/wrapper/gradle-wrapper.properties" }}
       - save_cache:
+          key: "v1-gradle-cache-{{ checksum \"build.gradle\" }}"
           paths:
             - ~/.gradle/caches
-          key: v1-gradle-cache-{{ checksum "build.gradle" }}
       - store_artifacts:
           path: build/libs
       - persist_to_workspace:
@@ -164,6 +163,7 @@ jobs:
           path: ~/test-results
       - store_artifacts:
           path: ~/test-results/junit
+
 
   docker-push:
     executor: docker
