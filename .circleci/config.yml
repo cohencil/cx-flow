@@ -110,15 +110,14 @@ jobs:
           # This workflow is run on master changes merged to this repo
       # This workflow is run on master changes merged to this repo
   workflows:
-    # This workflow is run on master changes merged to this repo
       build:
         jobs:
           - IntegrationTest:
               context: tal_tests_context
-              name: "run Integration Test"
+              name: "run IntegrationTest"
           - unitTest:
               context: tal_tests_context
-              name: "run unit Test"
+              name: "run unitTest"
           - unitTest:
               context: tal_tests_context
               name: "unitTest API"
