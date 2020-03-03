@@ -110,7 +110,7 @@ jobs:
           # This workflow is run on master changes merged to this repo
       # This workflow is run on master changes merged to this repo
   workflows:
-    version: 2
+      version: 2
       build:
         jobs:
           - IntegrationTest:
