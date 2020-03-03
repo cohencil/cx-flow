@@ -39,9 +39,13 @@ jobs:
           when: always
       - store_test_results:
           path: ~/test-results
-      - tore_artifacts:
+      - store_artifacts:
           path: ~/test-results/junit
   test:
+    docker:
+      - setup_remote_docker
+      - attach_workspace:
+            at: .
     steps:
       - run: "./gradlew IntegrationTest"
       - run: "./test.gradle unitTest"
