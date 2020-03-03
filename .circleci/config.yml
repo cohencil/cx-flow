@@ -43,7 +43,7 @@ jobs:
           path: ~/test-results/junit
   test:
     docker:
-      - setup_remote_docker
+      - image: "circleci/openjdk:8-jdk"
       - attach_workspace:
             at: .
     steps:
