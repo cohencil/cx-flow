@@ -166,7 +166,6 @@ jobs:
       - store_artifacts:
           path: ~/test-results/junit
 
-
   docker-push:
     executor: docker
     steps:
