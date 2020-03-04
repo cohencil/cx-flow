@@ -95,10 +95,7 @@ jobs:
     build_and_test:
       jobs:
         - build
-        - test:
-            filters:
-              branches:
-                only:  tal_tests
+        - test
 #   - docker-push:
 #          filters:
 #            branches:
