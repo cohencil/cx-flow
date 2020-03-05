@@ -15,8 +15,6 @@ jobs:
           key: "v1-gradle-cache-{{ checksum \"build.gradle\" }}"
       - run: "chmod u+x gradlew"
       - run: "./gradlew clean build"
-#      - run: "./gradlew integrationTest"
-#      - run: "./gradlew unitTest"
       - run: "./gradlew -b build-11.gradle --build-cache assemble"
       - run: "./gradlew -q getVersion > build/libs/version.txt"
       - save_cache:
@@ -45,10 +43,30 @@ jobs:
           path: ~/test-results
       - store_artifacts:
           path: ~/test-results/junit
-      - run: "./gradlew integrationTest"
-      - run: "./gradlew componentTest"
-      - run: "./gradlew unitTest"
 
+  test:
+    docker:
+      - image: "circleci/openjdk:8-jdk"
+    steps:
+      - checkout
+      - run:
+          name: Run Integration Tests
+          command: ./gradlew integrationTest --info
+      - run:
+          name: Run Component Tests
+          command: ./gradlew componentTest --info
+      - run:
+          name: Run Unit Tests
+          command: ./gradlew unitTest --info
+      - run:
+          name: Generate code coverage
+          command: './node_modules/.bin/nyc report --reporter=text-lcov'
+      - store_artifacts:
+          path: test-results.xml
+          prefix: tests
+      - store_artifacts:
+          path: coverage
+          prefix: coverage
 
   docker-push:
     docker:
@@ -73,7 +91,6 @@ jobs:
              -t ${DOCKER_REPO}:${VERSION}-11 \
              .
             docker push ${DOCKER_REPO}
-
   publish-github-release:
     docker:
       - image: circleci/golang:1.9
@@ -88,11 +105,23 @@ jobs:
             rm ./build/libs/version.txt
             ghr -t ${GITHUB_TOKEN} -u ${CIRCLE_PROJECT_USERNAME} -n ${VERSION} -r ${CIRCLE_PROJECT_REPONAME} -c ${CIRCLE_SHA1} -delete ${VERSION} ./build/libs/
 
+orbs:
+  sumologic: circleci/sumologic@x.y.z
 workflows:
   version: 2
   build_and_test:
     jobs:
+      - sumologic/workflow-collector
       - build
+      - test:
+          requires:
+            - build
+          filters:
+            branches:
+            only:  tal_tests
+#            requires:
+#              - build
+
 #   - docker-push:
 #          filters:
 #            branches:
