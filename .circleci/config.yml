@@ -116,9 +116,9 @@ workflows:
       - test:
           requires:
             - build
-          filters:
-            branches:
-            only:  tal_tests
+      filters:
+        branches:
+        only:  tal_tests
 #            requires:
 #              - build
 
