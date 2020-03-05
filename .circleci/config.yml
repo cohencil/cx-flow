@@ -105,13 +105,11 @@ jobs:
             rm ./build/libs/version.txt
             ghr -t ${GITHUB_TOKEN} -u ${CIRCLE_PROJECT_USERNAME} -n ${VERSION} -r ${CIRCLE_PROJECT_REPONAME} -c ${CIRCLE_SHA1} -delete ${VERSION} ./build/libs/
 
-orbs:
-  sumologic: circleci/sumologic@x.y.z
+
 workflows:
   version: 2
   build_and_test:
     jobs:
-      - sumologic/workflow-collector
       - build
       - test:
           requires:
