@@ -141,7 +141,7 @@ task unitTest(type: Test) {
 task componentTest(type: Test) {
     useJUnitPlatform() {
         systemProperty "testprofile", "component"
-        if (System.properties['testprofile'] != 'integration'| System.properties['testprofile'] != 'unit') {
+        if (System.properties['testprofile'] != 'integration' | System.properties['testprofile'] != 'unit') {
             exclude 'com/checkmarx/flow/cucumber/integration/**'
             exclude 'com/checkmarx/flow/test/flow**'
             exclude 'com/checkmarx/flow/exception/**'
@@ -164,14 +164,20 @@ task integrationTest(type: Test) {
 
     useJUnitPlatform() {
         systemProperty "testprofile", "integration"
-        if (System.properties['testprofile'] != 'unit') {
+        if (System.properties['testprofile'] != 'unit' | System.properties['testprofile'] != 'component') {
             include 'com/checkmarx/flow/cucumber/integration/**'
         }else{
             //exclude 'com/checkmarx/**'
+            exclude 'com/checkmarx/flow/test/flow**'
+            exclude 'com/checkmarx/flow/exception/**'
+            exclude 'com/checkmarx/flow/custom/**'
+            exclude 'com/checkmarx/flow/controller**'
+            exclude 'com/checkmarx/flow/filter/**'
+            exclude 'com/checkmarx/flow/service/**'
+            exclude 'com/checkmarx/flow/utils/**'
+            exclude 'com/checkmarx/flow/cucumber/component/**'
             exclude 'com/checkmarx/flow/cucumber/component/**'
         }
-        testLogging.showStandardStreams = true
-        testLogging.showExceptions = true
         testLogging {
             events "passed", "skipped", "failed"
         }
