@@ -45,7 +45,7 @@ jobs:
           path: ~/test-results
       - store_artifacts:
           path: ~/test-results/junit
-   test:
+   - test:
       steps:
         - run: "./gradlew integrationTest"
         - run: "./gradlew componentTest"
