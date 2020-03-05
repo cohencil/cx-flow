@@ -45,11 +45,11 @@ jobs:
           path: ~/test-results
       - store_artifacts:
           path: ~/test-results/junit
-       test:
-          steps:
-            - run: "./gradlew integrationTest"
-            - run: "./gradlew componentTest"
-            - run: "./gradlew unitTest"
+   test:
+      steps:
+        - run: "./gradlew integrationTest"
+        - run: "./gradlew componentTest"
+        - run: "./gradlew unitTest"
 
 
   docker-push:
