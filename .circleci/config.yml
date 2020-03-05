@@ -119,10 +119,10 @@ workflows:
                 only:  tal_tests
             requires:
               - build
-        - publish-github-release:
-            filters:
-              branches:
-                only: tal_tests
-            requires:
-              - build
+      - publish-github-release:
+          filters:
+            branches:
+              only: tal_tests
+          requires:
+            - build
 
