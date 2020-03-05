@@ -10,19 +10,19 @@ jobs:
     steps:
       - checkout
       - restore_cache:
-          key: "v1-gradle-wrapper-{{ checksum \"gradle/wrapper/gradle-wrapper.properties\" }}"
+          key: 'v1-gradle-wrapper-{{ checksum "gradle/wrapper/gradle-wrapper.properties" }}'
       - restore_cache:
-          key: "v1-gradle-cache-{{ checksum \"build.gradle\" }}"
+          key: 'v1-gradle-cache-{{ checksum "build.gradle" }}'
       - run: "chmod u+x gradlew"
       - run: "./gradlew clean build"
       - run: "./gradlew -b build-11.gradle --build-cache assemble"
       - run: "./gradlew -q getVersion > build/libs/version.txt"
       - save_cache:
-          key: "v1-gradle-wrapper-{{ checksum \"gradle/wrapper/gradle-wrapper.properties\" }}"
+          key: 'v1-gradle-wrapper-{{ checksum "gradle/wrapper/gradle-wrapper.properties" }}'
           paths:
             - ~/.gradle/wrapper
       - save_cache:
-          key: "v1-gradle-cache-{{ checksum \"build.gradle\" }}"
+          key: 'v1-gradle-cache-{{ checksum "build.gradle" }}'
           paths:
             - ~/.gradle/caches
       - store_artifacts:
@@ -60,7 +60,7 @@ jobs:
           command: ./gradlew unitTest --info
       - run:
           name: Generate code coverage
-          command: './node_modules/.bin/nyc report --reporter=text-lcov'
+          command: "./node_modules/.bin/nyc report --reporter=text-lcov"
       - store_artifacts:
           path: test-results.xml
           prefix: tests
@@ -105,7 +105,6 @@ jobs:
             rm ./build/libs/version.txt
             ghr -t ${GITHUB_TOKEN} -u ${CIRCLE_PROJECT_USERNAME} -n ${VERSION} -r ${CIRCLE_PROJECT_REPONAME} -c ${CIRCLE_SHA1} -delete ${VERSION} ./build/libs/
 
-
 workflows:
   version: 2
   build_and_test:
@@ -114,19 +113,16 @@ workflows:
       - test:
           requires:
             - build
-#            requires:
-#              - build
-
-#   - docker-push:
-#          filters:
-#            branches:
-#              only:  tal_tests
-#          requires:
-#            - build
-#      - publish-github-release:
-#          filters:
-#            branches:
-#              only: tal_tests
-#          requires:
-#            - build
+      - docker-push:
+            filters:
+              branches:
+                only:  tal_tests
+            requires:
+              - build
+        - publish-github-release:
+            filters:
+              branches:
+                only: tal_tests
+            requires:
+              - build
 
