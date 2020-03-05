@@ -45,9 +45,7 @@ jobs:
           path: ~/test-results
       - store_artifacts:
           path: ~/test-results/junit
-        test:
-          docker:
-            - image: "circleci/openjdk:8-jdk"
+      - test:
           steps:
             - run: "./gradlew integrationTest"
             - run: "./gradlew componentTest"
