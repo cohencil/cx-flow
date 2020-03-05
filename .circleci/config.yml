@@ -9,6 +9,8 @@ jobs:
   build:
     context: tal_tests_Context
     working_directory: ~/repo
+    environment:
+      MAVEN_OPTS: -Xmx3200m
     docker:
       - image: "circleci/openjdk:8-jdk"
     steps:
@@ -19,8 +21,8 @@ jobs:
           key: "v1-gradle-cache-{{ checksum \"build.gradle\" }}"
       - run: "chmod u+x gradlew"
       - run: "./gradlew clean build"
-      - run: "./gradlew integrationTest"
-      - run: "./gradlew unitTest"
+#      - run: "./gradlew integrationTest"
+#      - run: "./gradlew unitTest"
       - run: "./gradlew -b build-11.gradle --build-cache assemble"
       - run: "./gradlew -q getVersion > build/libs/version.txt"
       - save_cache:

@@ -61,36 +61,34 @@ repositories {
 
 dependencies {
     compile('org.springframework.boot:spring-boot-starter-actuator')
-	compile('org.springframework.boot:spring-boot-starter-web')
-	compile('org.springframework.boot:spring-boot-starter-aop')
+    compile('org.springframework.boot:spring-boot-starter-web')
+    compile('org.springframework.boot:spring-boot-starter-aop')
     compile("com.github.checkmarx-ts:cx-spring-boot-sdk:${CxSBSDK}")
-    compile ("org.apache.commons:commons-text:1.8")
-    compile ('commons-codec:commons-codec:1.13')
-    compile ('commons-io:commons-io:2.6')
-    compile ('org.apache.commons:commons-lang3:3.9')
-    compile ('org.json:json:20190722')
-    compile ('com.fasterxml.jackson.core:jackson-databind')
-    compile ('org.springframework.boot:spring-boot-starter-web-services')
-    compile ('org.springframework.boot:spring-boot-starter-mail')
-    compile ('org.springframework.boot:spring-boot-starter-thymeleaf')
-    compile ('com.github.ulisesbocchio:jasypt-spring-boot-starter:2.1.2')
-    compile ("io.atlassian.fugue:fugue:${atlassianFugueVersion}")
-    compile ("com.atlassian.jira:jira-rest-java-client-core:${atlassianVersion}")
-    compile ("com.atlassian.jira:jira-rest-java-client-api:${atlassianVersion}")
-    compile ("org.apache.httpcomponents:httpclient:4.5.10")
-    compile ("org.thymeleaf:thymeleaf:3.0.11.RELEASE")
-    compile ("org.codehaus.groovy:groovy-all:2.5.8")
-    compile ("org.apache.ivy:ivy:2.5.0")
-    compile ("org.eclipse.jgit:org.eclipse.jgit:5.5.1.201910021850-r")
-    compileOnly ('org.springframework.boot:spring-boot-configuration-processor')
+    compile("org.apache.commons:commons-text:1.8")
+    compile('commons-codec:commons-codec:1.13')
+    compile('commons-io:commons-io:2.6')
+    compile('org.json:json:20190722')
+    compile('com.fasterxml.jackson.core:jackson-databind')
+    compile('org.springframework.boot:spring-boot-starter-web-services')
+    compile('org.springframework.boot:spring-boot-starter-mail')
+    compile('org.springframework.boot:spring-boot-starter-thymeleaf')
+    compile('com.github.ulisesbocchio:jasypt-spring-boot-starter:2.1.2')
+    compile("io.atlassian.fugue:fugue:${atlassianFugueVersion}")
+    compile("com.atlassian.jira:jira-rest-java-client-core:${atlassianVersion}")
+    compile("com.atlassian.jira:jira-rest-java-client-api:${atlassianVersion}")
+    compile("org.apache.httpcomponents:httpclient:4.5.10")
+    compile("org.thymeleaf:thymeleaf:3.0.11.RELEASE")
+    compile("org.codehaus.groovy:groovy-all:2.5.8")
+    compile("org.apache.ivy:ivy:2.5.0")
+    compile("org.eclipse.jgit:org.eclipse.jgit:5.5.1.201910021850-r")
+    compileOnly('org.springframework.boot:spring-boot-configuration-processor')
     runtime('org.springframework.boot:spring-boot-devtools')
     testImplementation('org.springframework.boot:spring-boot-starter-test')
     compileJava.dependsOn(processResources)
     testImplementation("io.cucumber:cucumber-java:${cucumberVersion}")
     testImplementation("io.cucumber:cucumber-junit:${cucumberVersion}")
     testImplementation("io.cucumber:cucumber-spring:${cucumberVersion}")
-    testImplementation( "org.junit.jupiter:junit-jupiter-api:${junitVersion}")
-    testImplementation('org.awaitility:awaitility:4.0.2')
+    testImplementation("org.junit.jupiter:junit-jupiter-api:${junitVersion}")
     testRuntimeOnly("org.junit.jupiter:junit-jupiter-engine:${junitVersion}")
     testImplementation("com.github.java-json-tools:json-patch:1.11")
     testRuntimeOnly("org.junit.vintage:junit-vintage-engine:${junitVersion}")
@@ -107,13 +105,54 @@ bootJar {
     mainClassName = "${mainClass}"
 }
 
-test {
-    useJUnit {
+//task unitTest {
+//    useJUnit {
+//        systemProperty "testprofile", "unit"
+//        if (System.properties['testprofile'] != 'integration') {
+//            exclude 'com/checkmarx/flow/cucumber/integration/**'
+//        }else{
+//           // exclude 'com/checkmarx/**'
+//            include 'com/checkmarx/flow/cucumber/component/**'
+//        }
+//    }
+//}
+
+task unitTest(type: Test) {
+    useJUnitPlatform() {
         systemProperty "testprofile", "unit"
-        if (System.properties['testprofile'] != 'integration') {
+        if (System.properties['testprofile'] != 'integration' | System.properties['testprofile'] != 'component') {
             exclude 'com/checkmarx/flow/cucumber/integration/**'
-        }else{
-           // exclude 'com/checkmarx/**'
+            exclude 'com/checkmarx/flow/cucumber/component/**'
+        } else {
+            //exclude 'com/checkmarx/**'
+            include 'com/checkmarx/flow/test/flow**'
+            include 'com/checkmarx/flow/exception/**'
+            include 'com/checkmarx/flow/custom/**'
+            include 'com/checkmarx/flow/controller**'
+            include 'com/checkmarx/flow/filter/**'
+            include 'com/checkmarx/flow/service/**'
+            include 'com/checkmarx/flow/utils/**'
+        }
+        testLogging {
+            events "passed", "skipped", "failed"
+        }
+    }
+}
+task componentTest(type: Test) {
+    useJUnitPlatform() {
+        systemProperty "testprofile", "component"
+        if (System.properties['testprofile'] != 'integration'| System.properties['testprofile'] != 'unit') {
+            exclude 'com/checkmarx/flow/cucumber/integration/**'
+            exclude 'com/checkmarx/flow/test/flow**'
+            exclude 'com/checkmarx/flow/exception/**'
+            exclude 'com/checkmarx/flow/custom/**'
+            exclude 'com/checkmarx/flow/controller**'
+            exclude 'com/checkmarx/flow/filter/**'
+            exclude 'com/checkmarx/flow/service/**'
+            exclude 'com/checkmarx/flow/utils/**'
+
+        } else {
+            //exclude 'com/checkmarx/**'
             include 'com/checkmarx/flow/cucumber/component/**'
         }
         testLogging {
@@ -121,8 +160,8 @@ test {
         }
     }
 }
-
 task integrationTest(type: Test) {
+
     useJUnitPlatform() {
         systemProperty "testprofile", "integration"
         if (System.properties['testprofile'] != 'unit') {
@@ -131,9 +170,12 @@ task integrationTest(type: Test) {
             //exclude 'com/checkmarx/**'
             exclude 'com/checkmarx/flow/cucumber/component/**'
         }
+        testLogging.showStandardStreams = true
+        testLogging.showExceptions = true
         testLogging {
             events "passed", "skipped", "failed"
         }
+
     }
 }
 task getVersion {
@@ -141,6 +183,22 @@ task getVersion {
         println "${version}"
     }
 }
+//
+//test {
+//
+//    filter {
+//        //include specific method in any of the tests
+//        includeTestsMatching "*ComponentTest"
+//       // includeTestsMatching "*integration"
+//       // includeTestsMatching "*unitTest"
+//        //include all tests from package
+//      // includeTestsMatching "integrationTests.*"
+////
+////        //include all integration tests
+////        includeTestsMatching "*unit"
+//    }
+//
+//}
 
 test {
 
