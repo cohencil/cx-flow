@@ -15,6 +15,7 @@ jobs:
           key: 'v1-gradle-cache-{{ checksum "build.gradle" }}'
       - run: "chmod u+x gradlew"
       - run: "./gradlew clean build"
+      - run: "./gradlew unitTest --debug"
       - run: "./gradlew -b build-11.gradle --build-cache assemble"
       - run: "./gradlew -q getVersion > build/libs/version.txt"
       - save_cache:
@@ -56,19 +57,15 @@ jobs:
       - run:
           name: Run Component Tests
           command: ./gradlew componentTest --debug
-      - run:
-          name: Run Unit Tests
-          command: ./gradlew unitTest --debug
-      - run:
-          name: Generate code coverage
-          command: "./node_modules/.bin/nyc report --reporter=text-lcov"
+#      - run:
+#          name: Generate code coverage
+#          command: "./node_modules/.bin/nyc report --reporter=text-lcov"
       - store_artifacts:
           path: test-results.xml
           prefix: tests
       - store_artifacts:
           path: coverage
           prefix: coverage
-
   docker-push:
     docker:
       - image: docker:18.06.3-ce-git

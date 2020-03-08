@@ -119,7 +119,7 @@ task unitTest(type: Test) {
         }
     }
 }
-check.dependsOn.remove(test)
+
 task componentTest(type: Test) {
     useJUnitPlatform() {
         systemProperty "testprofile", "component"
