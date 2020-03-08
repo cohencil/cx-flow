@@ -97,7 +97,7 @@ configurations {
     libsDirName = 'libs/java11'
 }
 
-
+check.dependsOn.remove(test)
 task unitTest(type: Test) {
     useJUnitPlatform() {
         systemProperty "testprofile", "unit"

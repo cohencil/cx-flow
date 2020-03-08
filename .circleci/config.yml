@@ -44,7 +44,6 @@ jobs:
           path: ~/test-results
       - store_artifacts:
           path: ~/test-results/junit
-
   test:
     context: tal_tests_Context
     docker:
@@ -52,14 +51,11 @@ jobs:
     steps:
       - checkout
       - run:
-          name: Run Integration Tests
-          command: ./gradlew integrationTest --debug
-      - run:
           name: Run Component Tests
           command: ./gradlew componentTest --debug
-#      - run:
-#          name: Generate code coverage
-#          command: "./node_modules/.bin/nyc report --reporter=text-lcov"
+      - run:
+          name: Run Integration Tests
+          command: ./gradlew integrationTest --debug
       - store_artifacts:
           path: test-results.xml
           prefix: tests
@@ -108,21 +104,21 @@ workflows:
   build_and_test:
 
     jobs:
-      - build
-      - test:
-          context: tal_tests_Context
-          requires:
-            - build
-      - docker-push:
-            filters:
-              branches:
-                only:  tal_tests
-            requires:
-              - build
-      - publish-github-release:
-          filters:
-            branches:
-              only: tal_tests
-          requires:
-            - build
-
+      - build:
+          - test:
+              context: tal_tests_Context
+              requires:
+                - build
+#          - docker-push:
+#              filters:
+#                branches:
+#                  only:  tal_tests
+#              requires:
+#                - build
+#          - publish-github-release:
+#              filters:
+#                branches:
+#                  only: tal_tests
+#              requires:
+#                - build
+#
