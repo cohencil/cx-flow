@@ -116,7 +116,7 @@ bootJar {
 //        }
 //    }
 //}
-
+check.dependsOn.remove(test)
 task unitTest(type: Test) {
     useJUnitPlatform() {
         systemProperty "testprofile", "unit"
@@ -138,7 +138,7 @@ task unitTest(type: Test) {
         }
     }
 }
-check.dependsOn.remove(test)
+
 task componentTest(type: Test) {
     useJUnitPlatform() {
         systemProperty "testprofile", "component"
