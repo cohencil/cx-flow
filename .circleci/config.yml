@@ -104,21 +104,21 @@ workflows:
   build_and_test:
 
     jobs:
-      - build:
-          - test:
-              context: tal_tests_Context
-              requires:
-                - build
-#          - docker-push:
-#              filters:
-#                branches:
-#                  only:  tal_tests
-#              requires:
-#                - build
-#          - publish-github-release:
-#              filters:
-#                branches:
-#                  only: tal_tests
-#              requires:
-#                - build
-#
+      - build
+      - test:
+          context: tal_tests_Context
+          requires:
+            - build
+      - docker-push:
+          filters:
+            branches:
+              only:  tal_tests
+          requires:
+            - build
+      - publish-github-release:
+          filters:
+            branches:
+              only: tal_tests
+          requires:
+            - build
+
