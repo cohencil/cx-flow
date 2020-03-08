@@ -138,6 +138,7 @@ task unitTest(type: Test) {
         }
     }
 }
+check.dependsOn.remove(test)
 task componentTest(type: Test) {
     useJUnitPlatform() {
         systemProperty "testprofile", "component"
@@ -181,7 +182,6 @@ task integrationTest(type: Test) {
         testLogging {
             events "passed", "skipped", "failed"
         }
-
     }
 }
 task getVersion {
