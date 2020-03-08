@@ -52,13 +52,13 @@ jobs:
       - checkout
       - run:
           name: Run Integration Tests
-          command: ./gradlew integrationTest --info
+          command: ./gradlew integrationTest --debug
       - run:
           name: Run Component Tests
-          command: ./gradlew componentTest --info
+          command: ./gradlew componentTest --debug
       - run:
           name: Run Unit Tests
-          command: ./gradlew unitTest --info
+          command: ./gradlew unitTest --debug
       - run:
           name: Generate code coverage
           command: "./node_modules/.bin/nyc report --reporter=text-lcov"
