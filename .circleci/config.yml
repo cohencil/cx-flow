@@ -45,6 +45,7 @@ jobs:
           path: ~/test-results/junit
 
   test:
+    context: tal_tests_Context
     docker:
       - image: "circleci/openjdk:8-jdk"
     steps:
@@ -108,9 +109,11 @@ jobs:
 workflows:
   version: 2
   build_and_test:
+
     jobs:
       - build
       - test:
+          context: tal_tests_Context
           requires:
             - build
       - docker-push:
