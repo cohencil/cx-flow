@@ -3,7 +3,7 @@ cx-flow:
   # Agreed upon shared API token
   token: xxxx
   bug-tracker: Json
-
+ 
 checkmarx:
   multi-tenant: false
   configuration: Default Configuration
