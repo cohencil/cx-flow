@@ -131,7 +131,7 @@ public class WebHookSteps {
 
     private void sendWebHookRequest() {
         RestTemplate client = new RestTemplate();
-        String url = "http://localhost:" + cxFlowPort;
+        String url = "https://cxflow.atlassian.net:" + cxFlowPort;
         client.exchange(url, HttpMethod.POST, webHookRequest, String.class);
     }
 

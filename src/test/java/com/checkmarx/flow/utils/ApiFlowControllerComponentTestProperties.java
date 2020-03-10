@@ -27,7 +27,7 @@ public class ApiFlowControllerComponentTestProperties {
     @Value("${test.params.team:CxServer}")
     private String team;
 
-    @Value("${test.params.gitUrl:http://localhost/repo.git}")
+    @Value("${test.params.gitUrl:https://github.com/cxflowtestuser/Cx-FlowRepo.git}")
     private String gitUrl;
 
     @Value("${test.params.product:CX}")
