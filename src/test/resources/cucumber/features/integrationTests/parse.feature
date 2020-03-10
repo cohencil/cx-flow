@@ -1,4 +1,4 @@
-@Skip @ParseFeature @IntegrationTest
+@ParseFeature @IntegrationTest
 Feature: Check Component tests Parse functionality - parse report file which is result of a scan by CLI/Jenikns
 And command line example: java -jar cx-flow-1.5.2.jar -–parse –f="C:\CliReport.xml”
 And java -jar cx-flow-1.5.2.jar –parse –-f="C:\OSAVulnerailibiesFile.json”  --lib-file="C:\OSAVulnerailibiesFile.json”
