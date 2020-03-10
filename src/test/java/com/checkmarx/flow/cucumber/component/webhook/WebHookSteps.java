@@ -59,6 +59,7 @@ public class WebHookSteps {
     public void runAsService() {
         ConfigurableApplicationContext appContext = TestUtils.runCxFlowAsService();
         cxFlowPort = appContext.getEnvironment().getProperty("server.port");
+        log.info("cxFlowPort: {}", cxFlowPort);
     }
 
     @When("GitHub sends WebHook requests to CxFlow {int} times per second")
