@@ -10,20 +10,20 @@ jobs:
     steps:
       - checkout
       - restore_cache:
-          key: 'v1-gradle-wrapper-{{ checksum "gradle/wrapper/gradle-wrapper.properties" }}'
+          key: "v1-gradle-wrapper-{{ checksum \"gradle/wrapper/gradle-wrapper.properties\" }}"
       - restore_cache:
-          key: 'v1-gradle-cache-{{ checksum "build.gradle" }}'
+          key: "v1-gradle-cache-{{ checksum \"build.gradle\" }}"
       - run: "chmod u+x gradlew"
       - run: "./gradlew clean build"
-      - run: "./gradlew unitTest --debug"
+      - run: "./gradlew unitTest"
       - run: "./gradlew -b build-11.gradle --build-cache assemble"
       - run: "./gradlew -q getVersion > build/libs/version.txt"
       - save_cache:
-          key: 'v1-gradle-wrapper-{{ checksum "gradle/wrapper/gradle-wrapper.properties" }}'
+          key: "v1-gradle-wrapper-{{ checksum \"gradle/wrapper/gradle-wrapper.properties\" }}"
           paths:
             - ~/.gradle/wrapper
       - save_cache:
-          key: 'v1-gradle-cache-{{ checksum "build.gradle" }}'
+          key: "v1-gradle-cache-{{ checksum \"build.gradle\" }}"
           paths:
             - ~/.gradle/caches
       - store_artifacts:
@@ -56,12 +56,10 @@ jobs:
       - run:
           name: Run Integration Tests
           command: ./gradlew integrationTest --debug
+      - store_test_results:
+          path: ~/test-results
       - store_artifacts:
-          path: test-results.xml
-          prefix: tests
-      - store_artifacts:
-          path: coverage
-          prefix: coverage
+          path: ~/test-results/junit
   docker-push:
     docker:
       - image: docker:18.06.3-ce-git
