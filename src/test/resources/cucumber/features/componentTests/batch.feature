@@ -1,4 +1,4 @@
- @BatchFeature @ComponentTest
+@Skip @BatchFeature @ComponentTest
 Feature: Check Component tests - retrieve scans of existing project
 
   Background:
