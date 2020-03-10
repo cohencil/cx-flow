@@ -1,4 +1,4 @@
-@Skip @PublishFeature @ComponentTest
+ @PublishFeature @ComponentTest
 Feature: Check Component tests publish functionality
 
   Background:
