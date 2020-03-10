@@ -1,4 +1,4 @@
-@Skip @BatchFeature @IntegrationTest
+@BatchFeature @IntegrationTest
 Feature: Check Integration tests Batch functionality - retrieve scans of existing project
 ## TODO Should be tested with the following environment types:
 # | version |  environmentType |
