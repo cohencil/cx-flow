@@ -85,7 +85,7 @@ public class JiraPublishInvalidResultsSteps {
                 .team("CxServer")
                 .namespace("Test")
                 .repoName("TestRepo")
-                .repoUrl("http://localhost/repo.git")
+                .repoUrl("https://github.com/cxflowtestuser/Cx-FlowRepo.git")
                 .repoUrlWithAuth("http://localhost/repo.git")
                 .repoType(ScanRequest.Repository.GITHUB)
                 .bugTracker(bugTracker)

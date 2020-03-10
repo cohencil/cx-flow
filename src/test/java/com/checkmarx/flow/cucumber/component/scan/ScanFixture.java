@@ -16,7 +16,7 @@ public class ScanFixture {
     public static final String TEAM_PATH = "\\CxServer";
     public static final String TEAM_ID = "1";
     public static final int SCAN_ID = 1;
-    public static final String SCAN_LINK = "http://localhost/CxWebClient/ViewerMain.aspx?scanid=" + SCAN_ID + "&projectid=" + PROJECT_ID;
+    public static final String SCAN_LINK = "https://sast.cx.tikal.io/CxWebClient/ViewerMain.aspx?scanid=" + SCAN_ID + "&projectid=" + PROJECT_ID;
     public static final String FILES_SCANNED = "1";
     public static final String LOC_SCANNED = "8";
     public static final String SCAN_TYPE = "Full";
