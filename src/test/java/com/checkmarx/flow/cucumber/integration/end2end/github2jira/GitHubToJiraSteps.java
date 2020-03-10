@@ -150,7 +150,7 @@ public class GitHubToJiraSteps {
 
         JSONArray hooks = getJSONArray(REPO_HOOKS_BASE_URL);
 
-        if (!hooks.isEmpty()) {
+        if (hooks != null && !hooks.isEmpty()) {
             fail("repository alredy has hooks configured");
         }
 
