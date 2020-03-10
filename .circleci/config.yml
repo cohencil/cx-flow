@@ -52,10 +52,10 @@ jobs:
       - checkout
       - run:
           name: Run Component Tests
-          command: ./gradlew componentTest --debug
+          command: ./gradlew componentTest --info
       - run:
           name: Run Integration Tests
-          command: ./gradlew integrationTest --debug
+          command: ./gradlew integrationTest --info
       - run:
           command: |
             mkdir -p ~/test-results/junit/
