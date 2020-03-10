@@ -1,4 +1,4 @@
-@ScanFeature @IntegrationTest
+@Skip @ScanFeature @IntegrationTest
 Feature: Check Integration tests command line functionality - scan. 
 # Examples:
 # And java -jar cx-flow-1.5.2.jar --scan --github --cx-project="CodeInjection" --repo-url="https://github.com/username/Inj.git"  --namespace="MyNamespace" --app="MyApp" --branch="master" --spring.config.location="C:\MyProjects\cx-flow-runtime\application.yml"
