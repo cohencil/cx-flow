@@ -53,9 +53,12 @@ jobs:
       - run:
           name: Run Component Tests
           command: ./gradlew componentTest --info
+#      - run:
+#          name: Run Integration Tests
+#          command: ./gradlew integrationTest --info
       - run:
-          name: Run Integration Tests
-          command: ./gradlew integrationTest --info
+          name: Run e2eTests Tests
+          command: ./gradlew e2eTests --info
       - run:
           command: |
             mkdir -p ~/test-results/junit/
