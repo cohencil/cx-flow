@@ -21,8 +21,7 @@ jobs:
           key: "v1-gradle-cache-{{ checksum \"build.gradle\" }}"
       - run: "chmod u+x gradlew"
       - run: "./gradlew clean build"
-#      - run: "./gradlew integrationTest"
-#      - run: "./gradlew unitTest"
+      - run: "./gradlew unitTest"
       - run: "./gradlew -b build-11.gradle --build-cache assemble"
       - run: "./gradlew -q getVersion > build/libs/version.txt"
       - save_cache:
@@ -36,7 +35,6 @@ jobs:
       - store_artifacts:
           path: build/libs
       - persist_to_workspace:
-          root: .
           paths:
             - build/libs/*
             - Dockerfile
