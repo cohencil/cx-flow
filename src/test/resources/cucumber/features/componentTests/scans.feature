@@ -1,4 +1,4 @@
-@Skip @ScanFeature @ComponentTest
+ @ScanFeature @ComponentTest
 Feature: Check Component tests command line functionality - scan. Parameter set example:
   And java -jar cx-flow-1.5.2.jar --scan --github --cx-project="CodeInjection" --repo-url="https://github.com/username/Inj.git"  --namespace="MyNamespace" --app="MyApp" --branch="master" --spring.config.location="C:\MyProjects\cx-flow-runtime\application.yml"
   And java -jar cx-flow-1.5.2.jar --scan --f="C:\Users\test\Desktop\projects_to_scan\Code_Injection\Code_Injection" --cx-team="CxServer" --cx-project="CodeInjection1" --app="ABC" --cx-team="/CxServer" --spring.config.location="C:\MyProjects\cx-flow-runtime\application.yml"
