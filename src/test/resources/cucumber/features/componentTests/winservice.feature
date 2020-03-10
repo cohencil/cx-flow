@@ -1,2 +1,2 @@
-@Skip @WinServiceFeature @ComponentTest
+ @WinServiceFeature @ComponentTest
 Feature: Check Component tests WinService functionality
