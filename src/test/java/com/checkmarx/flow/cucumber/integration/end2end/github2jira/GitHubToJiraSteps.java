@@ -328,7 +328,7 @@ public class GitHubToJiraSteps {
     private Properties getProperties() {
         Properties prop = new Properties();
         try {
-            File file = ResourceUtils.getFile("com/cucumber/features/e2eTests/githubHookProperties.properties");
+            File file = ResourceUtils.getFile("src/test/resources/cucumber/features/e2eTests/githubHookProperties.properties");
             prop.load(Files.newInputStream(file.toPath()));
         } catch ( FileNotFoundException e) {
             fail("property file not found " + e.getMessage());
