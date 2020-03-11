@@ -103,7 +103,7 @@ Feature: parse, and then publish processing given SAST XML results, findings sho
     Then there should be one closed and one open issue
 
 
-  @Integration @Negative_test @Error_Handling
+  @Skip @Integration @Negative_test @Error_Handling
   Scenario: Perform a GET REST call to unreachable JIRA environment
     Given target is JIRA
     And JIRA is configured with invalid URL
