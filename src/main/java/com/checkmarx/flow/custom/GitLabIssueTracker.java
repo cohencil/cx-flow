@@ -8,7 +8,6 @@ import com.checkmarx.flow.dto.gitlab.Note;
 import com.checkmarx.flow.exception.MachinaException;
 import com.checkmarx.flow.utils.ScanUtils;
 import com.checkmarx.sdk.dto.ScanResults;
-import org.apache.commons.lang3.exception.ExceptionUtils;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.slf4j.Logger;
@@ -80,7 +79,7 @@ public class GitLabIssueTracker implements IssueTracker {
     private String getProjectDetails(Integer projectId){
         String endpoint = properties.getApiUrl().concat(PROJECT_PATH);
         HttpEntity httpEntity = new HttpEntity<>(createAuthHeaders());
-        log.info("Calling GitLab for additional Repository/Project information of project Id", projectId);
+        log.info("Calling GitLab for additional Repository/Project information of project Id {}", projectId);
         ResponseEntity<String> response = restTemplate.exchange(
                 endpoint, HttpMethod.GET, httpEntity, String.class, projectId);
 
