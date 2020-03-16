@@ -50,9 +50,9 @@ jobs:
       - image: "circleci/openjdk:8-jdk"
     steps:
       - checkout
-      - run:
-          name: Run Component Tests
-          command: ./gradlew componentTest --info
+#      - run:
+#          name: Run Component Tests
+#          command: ./gradlew componentTest --info
 #      - run:
 #          name: Run Integration Tests
 #          command: ./gradlew integrationTest --info
