@@ -1,5 +1,5 @@
 server:
-  port: 8080
+  port: 8085
 
 #management:
 #  endpoint:
@@ -38,11 +38,11 @@ logging:
 
 cx-flow:
   # Agreed upon shared API token
-  token: xxxx
   bug-tracker: JIRA
   bug-tracker-impl:
     - CxXml
     - Json
+    - JIRA
     - GitLab
     - GitHub
     - Csv
@@ -55,13 +55,13 @@ cx-flow:
   filter-severity:
     - High
   filter-category:
-  filter-cwe:
-  filter-status:
+    filter-cwe:
+    filter-status:
 # track-application-only: false
   mitre-url: https://cwe.mitre.org/data/definitions/%s.html
-#  break-build: true
-#  wiki-url: https://custodela.atlassian.net/wiki/spaces/AS/pages/79462432/Remediation+Guidance
-#  codebash-url: https://cxa.codebashing.com/courses/
+  break-build: true
+  wiki-url: https://custodela.atlassian.net/wiki/spaces/AS/pages/79462432/Remediation+Guidance
+  codebash-url: https://cxa.codebashing.com/courses/
 #  mail:
  #    host: smtp.gmail.com
  #    port: 587
@@ -70,14 +70,14 @@ cx-flow:
  #    enabled:
 
 checkmarx:
-  username: xxxxx
-  password: xxxxx
+  username: admin@cx
+  password: Cx123456!
   client-secret: 014DF517-39D1-4453-B7B3-9930C563627C
-  base-url: http://cx.local
+  base-url: https://sast.cx.tikal.io
   multi-tenant: true
   configuration: Default Configuration
   scan-preset: Checkmarx Default
-  team: \CxServer\SP\Checkmarx
+  team: \CxServer\SP\Company\Users
   url: ${checkmarx.base-url}/cxrestapi
   #preserve-xml: true
   #incremental: true
@@ -87,13 +87,13 @@ checkmarx:
   #project-script:
 
 jira:
-  url: https://xxxxx.atlassian.net
-  username: xxxx
-  token: xxxx
+  url: https://cxflow.atlassian.net/
+  username: cxflowtestuser@checkmarx.com
   project: APPSEC
-  issue-type: Application Security Bug
+  token: vFqIzQka0hLXvFj3Z8gVE4C6
+  issue-type: Bug
   priorities:
-    X: Y # Map Checkmarx severity : to JIRA Priority
+    x : Y
   open-transition: Reopen Issue
   close-transition: Close Issue
   open-status:
@@ -101,8 +101,7 @@ jira:
     - In Progress
     - Reopened
   closed-status:
-    - Closed
-    - Resolved
+    - Done
 #  fields:
 
 rally:
@@ -113,9 +112,9 @@ rally:
   api-url: https://rally1.rallydev.com/slm/webservice/v2.0
 
 github:
-  webhook-token: xxxx
-  token: xxxx
-  url: https://github.com
+  webhook-token: 1234
+  token: 80a28281767fd81cb9053dca24bc1b62acf44b11
+  url: https://github.com/cxflowtestuser/
   api-url: https://api.github.com/repos/
   false-positive-label: false-positive
   block-merge: true
@@ -139,11 +138,11 @@ azure:
 
 json:
   file-name-format: "[TEAM]-[PROJECT]-[TIME].json"
-  data-folder: "/tmp/cxflow"
+  data-folder: "tmp/cxflow"
 
 cx-xml:
   file-name-format: "[TEAM]-[PROJECT]-[TIME].xml"
-  data-folder: "/tmp/cxflow"
+  data-folder: "tmp/cxflow"
 
 csv:
   file-name-format: "[TEAM]-[PROJECT]-[TIME].csv"

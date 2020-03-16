@@ -46,7 +46,6 @@ public class TestContext {
      */
     private List<String> baseFilenames;
 
-
     public TestContext(CxFlowRunner cxFlowRunner, JsonProperties jsonProperties) {
         this.cxFlowRunner = cxFlowRunner;
         this.jsonProperties = jsonProperties;
@@ -55,7 +54,6 @@ public class TestContext {
         String scenarioSubdir = String.format("cxflow-parse-tests-%s", UUID.randomUUID());
 
         this.workDir = Paths.get(systemTempDir, scenarioSubdir).toString();
-        this.jsonProperties.setDataFolder(workDir);
     }
 
     public void reset() {
@@ -107,5 +105,9 @@ public class TestContext {
 
     public List<String> getBaseFilenames() {
         return baseFilenames;
+    }
+
+    public void initWorkDir() {
+        jsonProperties.setDataFolder(workDir);
     }
 }
