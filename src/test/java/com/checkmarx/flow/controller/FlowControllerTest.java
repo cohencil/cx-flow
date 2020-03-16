@@ -16,6 +16,7 @@ import com.checkmarx.sdk.service.CxClient;
 import com.checkmarx.utils.TestsParseUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.junit.Assert;
+import org.junit.Ignore;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
