@@ -1,8 +1,5 @@
 package com.checkmarx.flow.cucumber.integration.end2end.github2jira;
 
-import com.checkmarx.flow.cucumber.common.utils.TestUtils;
-import io.cucumber.java.en.Given;
-
 import com.atlassian.jira.rest.client.api.JiraRestClient;
 import com.atlassian.jira.rest.client.api.SearchRestClient;
 import com.atlassian.jira.rest.client.api.domain.Issue;
@@ -12,6 +9,7 @@ import com.checkmarx.flow.CxFlowApplication;
 import com.checkmarx.flow.config.FlowProperties;
 import com.checkmarx.flow.config.GitHubProperties;
 import com.checkmarx.flow.config.JiraProperties;
+import com.checkmarx.flow.cucumber.common.utils.TestUtils;
 import com.checkmarx.flow.dto.BugTracker.Type;
 import com.checkmarx.flow.dto.github.Committer;
 import com.checkmarx.flow.dto.github.Config;
@@ -33,6 +31,7 @@ import org.springframework.web.client.RestTemplate;
 import io.atlassian.util.concurrent.Promise;
 import io.cucumber.java.After;
 import io.cucumber.java.en.And;
+import io.cucumber.java.en.Given;
 import io.cucumber.java.en.Then;
 import io.cucumber.java.en.When;
 
@@ -40,7 +39,15 @@ import com.fasterxml.jackson.databind.node.ObjectNode;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.http.*;
+import org.springframework.util.ResourceUtils;
+import org.springframework.web.client.RestTemplate;
 
+import javax.annotation.PostConstruct;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
@@ -59,16 +66,14 @@ import java.util.Properties;
 import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
 
-import javax.annotation.PostConstruct;
-
 import static org.junit.jupiter.api.Assertions.*;
 
 /**
  * Check cxflow end-2-end SAST flow between GitHub webhook and JIRA
  */
-@SpringBootTest(classes = { CxFlowApplication.class })
+@SpringBootTest(classes = {CxFlowApplication.class})
 public class GitHubToJiraSteps {
-
+    private static final Logger log = LoggerFactory.getLogger(GitHubToJiraSteps.class);
     private static final String srcFile = "GitHubToJiraSteps.src";
 
     private String COMMIT_FILE_PATH;
@@ -93,6 +98,7 @@ public class GitHubToJiraSteps {
 
     @PostConstruct
     public void init() throws IOException {
+
         Properties properties = TestUtils.getPropertiesFromResource("cucumber\\features\\e2eTests\\githubHookProperties.properties");
         String namespace = Optional.ofNullable(System.getenv("HOOK_NAMESPACE")).orElse(properties.getProperty("namespace"));
         String repo = Optional.ofNullable(System.getenv("HOOK_REPO")).orElse(properties.getProperty("repo"));
@@ -136,6 +142,7 @@ public class GitHubToJiraSteps {
     @And("target is Jira")
     public void setTargetToJira() {
         flowProperties.setBugTracker(Type.JIRA.name());
+        log.info("target set to : {}", flowProperties.getBugTracker());
     }
 
     @And("CxFlow is running as a service")
@@ -148,6 +155,7 @@ public class GitHubToJiraSteps {
         final RestTemplate restTemplate = new RestTemplate();
 
         JSONArray hooks = getJSONArray(REPO_HOOKS_BASE_URL);
+        log.info("Webhook Base URL : {} ", REPO_HOOKS_BASE_URL);
 
         if (!hooks.isEmpty()) {
             fail("repository alredy has hooks configured");
@@ -156,6 +164,7 @@ public class GitHubToJiraSteps {
         Hook data = null;
         try {
             data = generateHookData(hookTargetURL, gitHubProperties.getWebhookToken());
+            log.info("Webhook Data: {} ", data.toString());
         } catch (Exception e) {
             fail("can not create web hook, check parameters");
         }
@@ -206,6 +215,7 @@ public class GitHubToJiraSteps {
     public void validateScanStarted() {
         String severities = "(" + flowProperties.getFilterSeverity().stream().collect(Collectors.joining(",")) + ")";
         String jql = String.format("project = %s and priority  in %s", jiraProperties.getProject(), severities);
+        log.info("jql query : {}", jql);
         HashSet<String> fields = new HashSet<String>();
         fields.addAll(
                 Arrays.asList("key", "project", "issuetype", "summary", "labels", "created", "updated", "status"));
@@ -226,7 +236,7 @@ public class GitHubToJiraSteps {
             }
 
         } while (result == null || result.getTotal() == 0);
-
+        log.info("result: {}", result.getIssues().iterator());
         Iterator<Issue> itr = result.getIssues().iterator();
         assertTrue(itr.hasNext(), "Jira is missing the issues");
         while (itr.hasNext()) {
@@ -329,7 +339,7 @@ public class GitHubToJiraSteps {
         try {
             File file = ResourceUtils.getFile("src\\test\\resources\\cucumber\\features/e2eTests\\githubHookProperties.properties");
             prop.load(Files.newInputStream(file.toPath()));
-        } catch ( FileNotFoundException e) {
+        } catch (FileNotFoundException e) {
             fail("property file not found " + e.getMessage());
         } catch (IOException e) {
             fail("could not read properties file " + e.getMessage());

@@ -11,7 +11,6 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ObjectNode;
-import org.apache.tools.ant.taskdefs.condition.IsSet;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -27,8 +26,6 @@ import java.net.URISyntaxException;
 import java.util.Base64;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 
 @TestComponent
@@ -65,13 +62,13 @@ public class JiraTestUtils implements IJiraTestUtils {
     }
 
     private SearchResult search(String jql) {
-        return  client.getSearchClient().searchJql(jql).claim();
+        return client.getSearchClient().searchJql(jql).claim();
     }
 
     @Override
     public void cleanProject(String projectKey) {
         SearchResult searchResult = searchForAllIssues(projectKey);
-        for (Issue issue: searchResult.getIssues()) {
+        for (Issue issue : searchResult.getIssues()) {
             deleteIssue(issue.getKey());
         }
     }
@@ -84,14 +81,14 @@ public class JiraTestUtils implements IJiraTestUtils {
 
     @Override
     public Map<Filter.Severity, Integer> getIssuesPerSeverity(String projectKey) {
-        Map<Filter.Severity, Integer> result= new HashMap<>();
+        Map<Filter.Severity, Integer> result = new HashMap<>();
         SearchResult searchResults = searchForAllIssues(projectKey);
-        for (Issue issue: searchResults.getIssues()) {
+        for (Issue issue : searchResults.getIssues()) {
             String severity = getIssueSeverity(issue.getDescription()).toUpperCase();
             Filter.Severity filterSeverity = Filter.Severity.valueOf(severity.toUpperCase());
             if (severity != null) {
                 if (result.containsKey(filterSeverity)) {
-                    result.put(filterSeverity,result.get(filterSeverity) + 1 );
+                    result.put(filterSeverity, result.get(filterSeverity) + 1);
                 } else {
                     result.put(filterSeverity, 1);
                 }
@@ -101,10 +98,8 @@ public class JiraTestUtils implements IJiraTestUtils {
     }
 
     private String getIssueSeverity(String issueDescription) {
-        return getIssueBodyPart(issueDescription,"Severity:");
+        return getIssueBodyPart(issueDescription, "Severity:");
     }
-
-
 
 
     private String getIssueBodyPart(String issueDescription, String field) {
@@ -132,7 +127,7 @@ Lines: 222
 Line #222:
 */
         String[] lines = issueDescription.split(System.lineSeparator());
-        for (String line: lines) {
+        for (String line : lines) {
             if (line.contains(field)) {
                 return line.split(" ")[1];
             }
@@ -144,7 +139,7 @@ Line #222:
     public String getIssueFilename(String projectKey) {
         Issue issue = getFirstIssue(projectKey);
         String firstLine = issue.getDescription().split(System.lineSeparator())[0];
-        String[] firstLineParts= firstLine.split(" ");
+        String[] firstLineParts = firstLine.split(" ");
         return firstLineParts[4];
     }
 
@@ -152,7 +147,7 @@ Line #222:
     public String getIssueVulnerability(String projectKey) {
         Issue issue = getFirstIssue(projectKey);
         String firstLine = issue.getDescription().split(System.lineSeparator())[0];
-        String[] firstLineParts= firstLine.split(" ");
+        String[] firstLineParts = firstLine.split(" ");
         return firstLineParts[0];
     }
 
@@ -160,7 +155,7 @@ Line #222:
     @Override
     public int getFirstIssueNumOfFindings(String projectKey) {
         SearchResult result = searchForAllIssues(projectKey);
-        if (result.getTotal() ==0) {
+        if (result.getTotal() == 0) {
             return 0;
         }
         Issue i = result.getIssues().iterator().next();
@@ -217,7 +212,7 @@ Line #222:
     public Map<String, Integer> getIssuesByStatus(String projectKey) {
         Map<String, Integer> result = new HashMap<>();
         SearchResult searchResults = searchForAllIssues(projectKey);
-        for (Issue issue: searchResults.getIssues()) {
+        for (Issue issue : searchResults.getIssues()) {
             if (result.containsKey(issue.getStatus().getName())) {
                 result.put(issue.getStatus().getName(), result.get(issue.getStatus().getName()) + 1);
             } else {
@@ -354,7 +349,7 @@ Line #222:
     private Issue getFirstIssue(String projectKey) {
         SearchResult result = searchForAllIssues(projectKey);
         if (result.getTotal() == 0) {
-             throw new JiraUtilsException("No issues found in JIRA. At least one issue is expected");
+            throw new JiraUtilsException("No issues found in JIRA. At least one issue is expected");
         }
         return result.getIssues().iterator().next();
     }

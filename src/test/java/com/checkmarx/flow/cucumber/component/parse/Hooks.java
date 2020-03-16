@@ -19,6 +19,9 @@ public class Hooks {
 
     @Before("@ParseFeature")
     public void beforeEachScenario() {
+        // Cannot do this inside TextContext constructor, because it will interfere with other tests.
+        testContext.initWorkDir();
+
         tryCreateWorkDir();
         testContext.reset();
     }

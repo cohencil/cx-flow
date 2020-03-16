@@ -21,6 +21,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.HttpClientErrorException;
+
 import javax.annotation.PostConstruct;
 import java.beans.ConstructorProperties;
 import java.net.URI;
@@ -93,9 +94,10 @@ public class JiraService {
                     jiraProperties.getRepoLabelPrefix(), request.getRepoName(),
                     jiraProperties.getLabelTracker(),
                     jiraProperties.getBranchLabelPrefix(), request.getBranch()
+
             );
-        }/*Only application and repo provided */
-        else if (!ScanUtils.empty(request.getApplication()) && !ScanUtils.empty(request.getRepoName())) {
+
+        }/*Only application and repo provided */ else if (!ScanUtils.empty(request.getApplication()) && !ScanUtils.empty(request.getRepoName())) {
 
             jql = String.format("project = %s and issueType = \"%s\" and (\"%s\" = \"%s\" and \"%s\" = \"%s:%s\" and \"%s\" = \"%s:%s\")",
                     bugTracker.getProjectKey(),
@@ -108,8 +110,7 @@ public class JiraService {
                     jiraProperties.getRepoLabelPrefix(), request.getRepoName()
             );
 
-        }/*Only application provided*/
-        else if (!ScanUtils.empty(request.getApplication())) {
+        }/*Only application provided*/ else if (!ScanUtils.empty(request.getApplication())) {
             jql = String.format("project = %s and issueType = \"%s\" and (\"%s\" = \"%s\" and \"%s\" = \"%s:%s\")",
                     bugTracker.getProjectKey(),
                     bugTracker.getIssueType(),
@@ -122,7 +123,7 @@ public class JiraService {
             log.error("Namespace/Repo/Branch or App must be provided in order to properly track ");
             throw new MachinaRuntimeException();
         }
-        log.debug(jql);
+        log.debug("jql query : {}", jql);
         HashSet<String> fields = new HashSet<String>();
         fields.add("key");
         fields.add("project");
@@ -135,6 +136,7 @@ public class JiraService {
         Promise<SearchResult> searchJqlPromise = this.client.getSearchClient().searchJql(jql, MAX_JQL_RESULTS, 0, fields);
         for (Issue issue : searchJqlPromise.claim().getIssues()) {
             issues.add(issue);
+            log.info("issue : {}", issue);
         }
         return issues;
     }
@@ -146,6 +148,7 @@ public class JiraService {
     private IssueType getIssueType(String projectKey, String type) throws RestClientException, JiraClientException {
         Project project = this.projectClient.getProject(projectKey).claim();
         Iterator<IssueType> issueTypes = project.getIssueTypes().iterator();
+        log.info("getIssueType iterator: {}", issueTypes);
         while (issueTypes.hasNext()) {
             IssueType it = issueTypes.next();
             if (it.getName().equals(type)) {
@@ -470,8 +473,8 @@ public class JiraService {
                                 if (issue.getDetails() != null) {
                                     issue.getDetails().entrySet()
                                             .stream()
-                                            .filter( x -> x.getKey( ) != null && x.getValue() != null && x.getValue().getComment() != null && !x.getValue().getComment().isEmpty())
-                                            .forEach( c -> comments.append(String.format(commentFmt, c.getKey(), c.getValue().getComment())));
+                                            .filter(x -> x.getKey() != null && x.getValue() != null && x.getValue().getComment() != null && !x.getValue().getComment().isEmpty())
+                                            .forEach(c -> comments.append(String.format(commentFmt, c.getKey(), c.getValue().getComment())));
                                     value = comments.toString();
                                 }
                                 break;
@@ -580,7 +583,7 @@ public class JiraService {
 
     /**
      * Tranistions an issue based on the issue id and transition name
-     *
+     * <p>
      * TODO handle re-open transition fields
      *
      * @param bugId
@@ -642,7 +645,6 @@ public class JiraService {
     }
 
     /**
-     *
      * @param assignee
      * @return
      */
@@ -651,7 +653,6 @@ public class JiraService {
     }
 
     /**
-     *
      * @param bugId
      * @param comment
      */
@@ -682,7 +683,6 @@ public class JiraService {
     }
 
     /**
-     *
      * @param project
      * @param issueType
      * @param fieldName
@@ -927,7 +927,7 @@ public class JiraService {
             parent.setBugTracker(bugTracker);
             issuesParent = this.getIssues(parent);
             if (grandParentUrl.length() == 0) {
-                 log.info("Grandparent field is empty");
+                log.info("Grandparent field is empty");
                 issuesGrandParent = null;
             } else {
                 BugTracker bugTrackerGrandParenet;
@@ -960,8 +960,7 @@ public class JiraService {
                         Issue fpIssue;
                         fpIssue = checkForFalsePositiveIssuesInList(request, xIssue, currentIssue, issue);
                         closeIssueInCaseOfIssueIsInOpenState(request, closedIssues, fpIssue);
-                    }/*Ignore any with label indicating false positive*/
-                    else if (!issue.getLabels().contains(jiraProperties.getFalsePositiveLabel())) {
+                    }/*Ignore any with label indicating false positive*/ else if (!issue.getLabels().contains(jiraProperties.getFalsePositiveLabel())) {
                         updateIssueAndAddToNewIssuesList(request, updatedIssues, xIssue, currentIssue, issue);
                     } else {
                         log.info("Skipping issue marked as false-positive or has False Positive state with key {}", xIssue.getKey());
@@ -1060,9 +1059,9 @@ public class JiraService {
     Map<String, ScanResults.XIssue> getNonPublishedScanResults() {
         return nonPublishedScanResultsMap;
     }
-    
+
     boolean parentCheck(String key, List<Issue> issues) {
-        if (issues != null){
+        if (issues != null) {
             Map<String, Issue> jiraMap;
             jiraMap = this.getJiraIssueMap(issues);
             if (this.jiraProperties.isChild() && (jiraMap.containsKey(key))) {
@@ -1073,9 +1072,9 @@ public class JiraService {
         }
         return false;
     }
-    
+
     boolean grandparentCheck(String key, List<Issue> issues) {
-        if (issues != null){
+        if (issues != null) {
             Map<String, Issue> jiraMap;
             jiraMap = this.getJiraIssueMap(issues);
             if (this.jiraProperties.isChild() && (jiraMap.containsKey(key))) {

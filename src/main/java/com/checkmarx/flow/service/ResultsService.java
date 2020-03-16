@@ -65,12 +65,14 @@ public class ResultsService {
             CompletableFuture<ScanResults> future = new CompletableFuture<>();
             //TODO async these, and join and merge after
             ScanResults results = cxService.getReportContentByScanId(scanId, filters);
-            if(cxProperties.getEnableOsa() && !ScanUtils.empty(osaScanId)){
+            log.info("ScanResults results : {}", results);
+            if (cxProperties.getEnableOsa() && !ScanUtils.empty(osaScanId)) {
                 log.info("Waiting for OSA Scan results for scan id {}", osaScanId);
                 results = osaService.waitForOsaScan(osaScanId, projectId, results, filters);
             }
             Map<String, Object> emailCtx = new HashMap<>();
             BugTracker.Type bugTrackerType = request.getBugTracker().getType();
+            log.info("bugTrackerType : {}", bugTrackerType);
             //Send email (if EMAIL was enabled and EMAIL was not main feedback option
             if (flowProperties.getMail() != null && flowProperties.getMail().isEnabled() &&
                     !bugTrackerType.equals(BugTracker.Type.NONE) &&
@@ -100,10 +102,12 @@ public class ResultsService {
                 log.info("Successfully completed automation for repository {} under namespace {}", repoName, namespace);
             }
             processResults(request, results);
+            log.info(String.format("request : %s", request.toString()));
+            log.info(String.format("results : %s", results.toString()));
             log.info("Process completed Succesfully");
             future.complete(results);
             return future;
-        }catch (Exception e){
+        } catch (Exception e) {
             log.error("Error occurred while processing results.", e);
             CompletableFuture<ScanResults> x = new CompletableFuture<>();
             x.completeExceptionally(e);
@@ -113,7 +117,7 @@ public class ResultsService {
     }
 
     void processResults(ScanRequest request, ScanResults results) throws MachinaException {
-        if(!cxProperties.getOffline()) {
+        if (!cxProperties.getOffline()) {
             getCxFields(request, results);
         }
         switch (request.getBugTracker().getType()) {
@@ -124,6 +128,7 @@ public class ResultsService {
                 break;
             case JIRA:
                 handleJiraCase(request, results);
+                log.info("Results Service case JIRA  -request : ", request.toString());
                 break;
             case GITHUBPULL:
                 gitService.processPull(request, results);
@@ -150,7 +155,7 @@ public class ResultsService {
                 adoService.endBlockMerge(request, results.getLink(), !results.getXIssues().isEmpty());
                 break;
             case EMAIL:
-                if(!flowProperties.getMail().isEnabled()) {
+                if (!flowProperties.getMail().isEnabled()) {
                     Map<String, Object> emailCtx = new HashMap<>();
                     String namespace = request.getNamespace();
                     String repoName = request.getRepoName();
@@ -177,7 +182,7 @@ public class ResultsService {
             default:
                 log.warn("No valid bug type was provided");
         }
-        if(results != null && results.getScanSummary() != null) {
+        if (results != null && results.getScanSummary() != null) {
             log.info("####Checkmarx Scan Results Summary####");
             log.info("Team: {}, Project: {}", request.getTeam(), request.getProject());
             log.info(results.getScanSummary().toString());
@@ -191,17 +196,17 @@ public class ResultsService {
             log.info("Processing results with JIRA issue tracking");
             jiraService.process(results, request);
         } catch (RestClientException e) {
-            if (e.getStatusCode().isPresent() && e.getStatusCode().get() ==  HttpStatus.NOT_FOUND.value()) {
+            if (e.getStatusCode().isPresent() && e.getStatusCode().get() == HttpStatus.NOT_FOUND.value()) {
                 throw new JiraClientRunTimeException("Jira service is not accessible for URL: " + jiraService.getJiraURI(), e);
             } else {
                 Map<String, ScanResults.XIssue> nonPublishedScanResultsMap = jiraService.getNonPublishedScanResults();
                 if (e.getStatusCode().isPresent() &&
-                        e.getStatusCode().get() ==  HttpStatus.BAD_REQUEST.value() &&
+                        e.getStatusCode().get() == HttpStatus.BAD_REQUEST.value() &&
                         nonPublishedScanResultsMap.size() > 0) {
                     throwExceptionWhenPublishingErrorOccurred(e, nonPublishedScanResultsMap);
 
                 } else {
-                    throw  e;
+                    throw e;
                 }
             }
         } catch (JiraClientException e) {
@@ -243,34 +248,33 @@ public class ResultsService {
     }
 
     /**
-     *
      * @param request
      * @param results
      */
-    private void getCxFields(ScanRequest request, ScanResults results) throws MachinaException{
-        try{
+    private void getCxFields(ScanRequest request, ScanResults results) throws MachinaException {
+        try {
             /*Are cx fields required?*/
-            if(!requiresCxCustomFields(request.getBugTracker().getFields())){
+            if (!requiresCxCustomFields(request.getBugTracker().getFields())) {
                 return;
             }
             /*if so, then get them and add them to the request object*/
-            if(!ScanUtils.empty(results.getProjectId()) && !results.getProjectId().equals(Constants.UNKNOWN)){
+            if (!ScanUtils.empty(results.getProjectId()) && !results.getProjectId().equals(Constants.UNKNOWN)) {
                 CxProject project = cxService.getProject(Integer.parseInt(results.getProjectId()));
                 Map<String, String> fields = new HashMap<>();
-                for(CxProject.CustomField field : project.getCustomFields()){
-                    if(!ScanUtils.empty(field.getName()) && !ScanUtils.empty(field.getValue())) {
+                for (CxProject.CustomField field : project.getCustomFields()) {
+                    if (!ScanUtils.empty(field.getName()) && !ScanUtils.empty(field.getValue())) {
                         fields.put(field.getName(), field.getValue());
                     }
                 }
-                if(!fields.isEmpty()){
+                if (!fields.isEmpty()) {
                     request.setCxFields(fields);
-                    if(!ScanUtils.empty(cxProperties.getJiraProjectField())){
+                    if (!ScanUtils.empty(cxProperties.getJiraProjectField())) {
                         String jiraProject = fields.get(cxProperties.getJiraProjectField());
-                        if(!ScanUtils.empty(jiraProject)) {
+                        if (!ScanUtils.empty(jiraProject)) {
                             request.getBugTracker().setProjectKey(jiraProject);
                         }
                     }
-                    if(!ScanUtils.empty(cxProperties.getJiraIssuetypeField())) {
+                    if (!ScanUtils.empty(cxProperties.getJiraIssuetypeField())) {
                         String jiraIssuetype = fields.get(cxProperties.getJiraIssuetypeField());
                         if (!ScanUtils.empty(jiraIssuetype)) {
                             request.getBugTracker().setIssueType(jiraIssuetype);
@@ -278,7 +282,7 @@ public class ResultsService {
                     }
                 }
             }
-        }catch (InvalidCredentialsException e){
+        } catch (InvalidCredentialsException e) {
             log.warn("Error retrieving Checkmarx Project details for {}, no custom fields will be available", results.getProjectId(), e);
             throw new MachinaException("Error logging into Checkmarx");
         }
@@ -290,12 +294,12 @@ public class ResultsService {
      * @param fields
      * @return
      */
-    private boolean requiresCxCustomFields(List<Field> fields){
-        if(fields == null){
+    private boolean requiresCxCustomFields(List<Field> fields) {
+        if (fields == null) {
             return false;
         }
-        for(Field f: fields){
-            if(f.getType().equals("cx")){
+        for (Field f : fields) {
+            if (f.getType().equals("cx")) {
                 return true;
             }
         }
