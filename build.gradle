@@ -124,6 +124,8 @@ task unitTest(type: Test) {
             exclude 'com/checkmarx/flow/cucumber/integration/**'
             exclude 'com/checkmarx/flow/cucumber/component/**'
             exclude 'com/checkmarx/flow/cucumber/integration/end2end/github2jira**'
+            exclude 'com/checkmarx/flow/controller/FlowControllerTest.java*'
+            
         } else {
             //exclude 'com/checkmarx/**'
             include 'com/checkmarx/flow/test/flow**'
