@@ -94,6 +94,8 @@ dependencies {
     testRuntimeOnly("org.junit.vintage:junit-vintage-engine:${junitVersion}")
     testCompile("org.mockito:mockito-core:+")
     compile("org.projectlombok:lombok:1.18.10")
+    testImplementation("org.awaitility:awaitility:4.0.0")
+
 }
 
 springBoot {
@@ -139,56 +141,30 @@ task unitTest(type: Test) {
     }
 }
 
-task componentTest(type: Test) {
-    useJUnitPlatform() {
-        systemProperty "testprofile", "component"
-        if (System.properties['testprofile'] != 'integration' | System.properties['testprofile'] != 'unit') {
-            exclude 'com/checkmarx/flow/cucumber/integration/**'
-            exclude 'com/checkmarx/flow/test/flow**'
-            exclude 'com/checkmarx/flow/exception/**'
-            exclude 'com/checkmarx/flow/custom/**'
-            exclude 'com/checkmarx/flow/controller**'
-            exclude 'com/checkmarx/flow/filter/**'
-            exclude 'com/checkmarx/flow/service/**'
-            exclude 'com/checkmarx/flow/utils/**'
+//task componentTest(type: Test) {
+//    useJUnitPlatform() {
+//        systemProperty "testprofile", "component"
+//        if (System.properties['testprofile'] != 'integration' | System.properties['testprofile'] != 'unit') {
+//            exclude 'com/checkmarx/flow/cucumber/integration/**'
+//            exclude 'com/checkmarx/flow/test/flow**'
+//            exclude 'com/checkmarx/flow/exception/**'
+//            exclude 'com/checkmarx/flow/custom/**'
+//            exclude 'com/checkmarx/flow/controller**'
+//            exclude 'com/checkmarx/flow/filter/**'
+//            exclude 'com/checkmarx/flow/service/**'
+//            exclude 'com/checkmarx/flow/utils/**'
+//            include 'com/checkmarx/flow/cucumber/component/**'
+//        } else {
+//            //exclude 'com/checkmarx/**'
+//            include 'com/checkmarx/flow/cucumber/component/**'
+//        }
+//        testLogging {
+//            events "passed", "skipped", "failed"
+//        }
+//    }
+//}
 
-        } else {
-            //exclude 'com/checkmarx/**'
-            include 'com/checkmarx/flow/cucumber/component/**'
-        }
-        testLogging {
-            events "passed", "skipped", "failed"
-        }
-    }
-}
-task integrationTest(type: Test) {
 
-    useJUnitPlatform() {
-        systemProperty "testprofile", "integration"
-        if (System.properties['testprofile'] != 'unit' | System.properties['testprofile'] != 'component') {
-            include 'com/checkmarx/flow/cucumber/integration/**'
-        }else{
-            //exclude 'com/checkmarx/**'
-            exclude 'com/checkmarx/flow/test/flow**'
-            exclude 'com/checkmarx/flow/exception/**'
-            exclude 'com/checkmarx/flow/custom/**'
-            exclude 'com/checkmarx/flow/controller**'
-            exclude 'com/checkmarx/flow/filter/**'
-            exclude 'com/checkmarx/flow/service/**'
-            exclude 'com/checkmarx/flow/utils/**'
-            exclude 'com/checkmarx/flow/cucumber/component/**'
-            exclude 'com/checkmarx/flow/cucumber/component/**'
-        }
-        testLogging {
-            events "passed", "skipped", "failed"
-        }
-    }
-}
-task getVersion {
-    doLast {
-        println "${version}"
-    }
-}
 //
 //test {
 //
@@ -235,6 +211,30 @@ task componentTest(type: Test) {
     check.dependsOn.remove(test)
 }
 
+task integrationTest(type: Test) {
+
+    useJUnitPlatform() {
+        systemProperty "testprofile", "integration"
+        if (System.properties['testprofile'] != 'unit' | System.properties['testprofile'] != 'component') {
+            include 'com/checkmarx/flow/cucumber/integration/**'
+        }else{
+            //exclude 'com/checkmarx/**'
+            exclude 'com/checkmarx/flow/test/flow**'
+            exclude 'com/checkmarx/flow/exception/**'
+            exclude 'com/checkmarx/flow/custom/**'
+            exclude 'com/checkmarx/flow/controller**'
+            exclude 'com/checkmarx/flow/filter/**'
+            exclude 'com/checkmarx/flow/service/**'
+            exclude 'com/checkmarx/flow/utils/**'
+            exclude 'com/checkmarx/flow/cucumber/component/**'
+            exclude 'com/checkmarx/flow/cucumber/component/**'
+        }
+        testLogging {
+            events "passed", "skipped", "failed"
+        }
+    }
+}
+
 task e2eTests(type: Test) {
     useJUnitPlatform() {
         systemProperty "testprofile", "e2e"
@@ -260,4 +260,10 @@ task e2eTests(type: Test) {
         }
     }
     check.dependsOn.remove(test)
+}
+
+task getVersion {
+    doLast {
+        println "${version}"
+    }
 }
