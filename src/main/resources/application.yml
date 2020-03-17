@@ -1,5 +1,5 @@
 server:
-  port: 8080
+  port: 8085
 
 #management:
 #  endpoint:
@@ -60,9 +60,9 @@ cx-flow:
   filter-status:
 # track-application-only: false
   mitre-url: https://cwe.mitre.org/data/definitions/%s.html
-#  break-build: true
-#  wiki-url: https://custodela.atlassian.net/wiki/spaces/AS/pages/79462432/Remediation+Guidance
-#  codebash-url: https://cxa.codebashing.com/courses/
+  break-build: true
+  wiki-url: https://custodela.atlassian.net/wiki/spaces/AS/pages/79462432/Remediation+Guidance
+  codebash-url: https://cxa.codebashing.com/courses/
 #  mail:
  #    host: smtp.gmail.com
  #    port: 587
@@ -74,11 +74,11 @@ checkmarx:
   username: xxxxx
   password: xxxxx
   client-secret: 014DF517-39D1-4453-B7B3-9930C563627C
-  base-url: http://cx.local
+  base-url: https://sast.cx.tikal.io
   multi-tenant: true
   configuration: Default Configuration
   scan-preset: Checkmarx Default
-  team: \CxServer\SP\Checkmarx
+  team: \CxServer\SP\Company\Users
   url: ${checkmarx.base-url}/cxrestapi
   #preserve-xml: true
   #incremental: true
@@ -102,8 +102,7 @@ jira:
     - In Progress
     - Reopened
   closed-status:
-    - Closed
-    - Resolved
+    - Done
 #  fields:
 
 rally:
