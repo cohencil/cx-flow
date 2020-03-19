@@ -235,14 +235,10 @@ workflows:
           filters:
             branches:
               only: develop
-          requires:
-            - build
       - docker-build:
           filters:
             branches:
               only: develop
-          requires:
-            - build
       - deploy-cxflow:
           cluster-name: eks-cxflow-ci
           chart: ./helm/cxflow
@@ -253,7 +249,6 @@ workflows:
             branches:
               only: develop
           requires:
-            - build
             - docker-build
       # - component-tests:
       #     requires:
