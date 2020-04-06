@@ -1,3 +1,5 @@
+[![Quality Gate Status](https://sonarcloud.io/api/project_badges/measure?project=checkmarx-ltd_cx-flow&metric=alert_status)](https://sonarcloud.io/dashboard?id=checkmarx-ltd_cx-flow)
+
 ## Release Notes
 Please read latest features and fixes from the Release.txt file
 
